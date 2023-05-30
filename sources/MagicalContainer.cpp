@@ -2,7 +2,7 @@
 
 namespace ariel
 {
-    MagicalContainer::MagicalContainer() : firstNodeASC(nullptr), firstNodeCROSS(nullptr), firstNodePRIME(nullptr), containerSize(0) {}
+    MagicalContainer::MagicalContainer() : firstNodeDEFAULT(nullptr), firstNodeASC(nullptr), firstNodeCROSS(nullptr), firstNodePRIME(nullptr), containerSize(0) {}
 
     MagicalContainer::~MagicalContainer() 
     {
@@ -20,7 +20,7 @@ namespace ariel
 
     void MagicalContainer::addToDefault(Node* newNode)
     {
-        if (firstNodeASC == nullptr)
+        if (firstNodeDEFAULT == nullptr)
         {
             firstNodeDEFAULT = newNode;
         }
@@ -33,11 +33,13 @@ namespace ariel
             }
             curr->nextNodeDEFAULT = newNode;
         }
+        this->setIndexDefault();
     }
+
 
     void MagicalContainer::addToASC(Node* newNode)
     {
-        if (firstNodeASC == nullptr || newNode->value <= firstNodeASC->value)
+        if (firstNodeASC == nullptr || newNode->value < firstNodeASC->value)
         {
             newNode->nextNodeASC = firstNodeASC;
             firstNodeASC = newNode;
@@ -52,6 +54,7 @@ namespace ariel
             newNode->nextNodeASC = curr->nextNodeASC;
             curr->nextNodeASC = newNode;
         }
+        this->setIndexASC();
     }
     void MagicalContainer::addToCross(Node* newNode) // implement later
     {
@@ -68,13 +71,14 @@ namespace ariel
             }
             curr->nextNodeCROSS = newNode;
         }
+        this->setIndexCross();
     }
 
     void MagicalContainer::addToPrime(Node* newNode)
     {
         if (isPrime(newNode->value))
         {
-            if (firstNodePRIME == nullptr || newNode->value <= firstNodePRIME->value)
+            if (firstNodePRIME == nullptr || newNode->value < firstNodePRIME->value)
             {
                 newNode->nextNodePRIME = firstNodePRIME;
                 firstNodePRIME = newNode;
@@ -89,17 +93,83 @@ namespace ariel
                 newNode->nextNodePRIME = curr->nextNodePRIME;
                 curr->nextNodePRIME = newNode;
             }
+            this->setIndexPrime();
+        }
+    }
+
+    bool MagicalContainer::isInContainer(int val)
+    {
+        Node* curr = this->firstNodeDEFAULT;
+        while (curr != nullptr) 
+        {
+            if (curr->value == val)
+            {
+                return true;
+            }
+            curr = curr->nextNodeDEFAULT;
+        }
+        return false;
+    }
+
+    void MagicalContainer::setIndexDefault()
+    {
+        int i = 0;
+        Node* curr = this->firstNodeDEFAULT;
+        while (curr != nullptr)
+        {
+            curr->indexDEFAULT = i;
+            curr = curr->nextNodeDEFAULT;
+            i++;
+        }
+    }
+
+    void MagicalContainer::setIndexASC()
+    {
+        int i = 0;
+        Node* curr = this->firstNodeASC;
+        while (curr != nullptr)
+        {
+            curr->indexASC = i;
+            curr = curr->nextNodeASC;
+            i++;
+        }
+    }
+
+    void MagicalContainer::setIndexCross()
+    {
+        int i = 0;
+        Node* curr = this->firstNodeCROSS;
+        while (curr != nullptr)
+        {
+            curr->indexCROSS = i;
+            curr = curr->nextNodeCROSS;
+            i++;
+        }
+    }
+
+    void MagicalContainer::setIndexPrime()
+    {
+        int i = 0;
+        Node* curr = this->firstNodePRIME;
+        while (curr != nullptr)
+        {
+            curr->indexPRIME = i;
+            curr = curr->nextNodePRIME;
+            i++;
         }
     }
 
     void MagicalContainer::addElement(int val)
     {
-        Node* newNode = new Node(val);
-        addToDefault(newNode); 
-        addToASC(newNode);
-        addToCross(newNode);
-        addToPrime(newNode);
-        this->containerSize++;
+        if (!isInContainer(val)) // every value is unique
+        {
+            Node* newNode = new Node(val);
+            addToDefault(newNode); 
+            addToASC(newNode);
+            addToCross(newNode);
+            addToPrime(newNode);
+            this->containerSize++;
+        }
     }
 
     void MagicalContainer::removeFromDefault(int val)
@@ -112,12 +182,6 @@ namespace ariel
             prev = curr;
             curr = curr->nextNodeDEFAULT;
         }
-
-        if (curr == nullptr)
-        {
-            return; // Value not found
-        }
-
         if (prev == nullptr)
         {
             firstNodeDEFAULT = curr->nextNodeDEFAULT;
@@ -126,8 +190,7 @@ namespace ariel
         {
             prev->nextNodeDEFAULT = curr->nextNodeDEFAULT;
         }
-        this->containerSize--;
-        delete curr;
+        this->setIndexDefault();
     }
 
     void MagicalContainer::removeFromASC(int val)
@@ -140,12 +203,6 @@ namespace ariel
             prev = curr;
             curr = curr->nextNodeASC;
         }
-
-        if (curr == nullptr)
-        {
-            return; // Value not found
-        }
-
         if (prev == nullptr)
         {
             firstNodeASC = curr->nextNodeASC;
@@ -154,8 +211,7 @@ namespace ariel
         {
             prev->nextNodeASC = curr->nextNodeASC;
         }
-
-        delete curr;
+        this->setIndexASC();
     }
 
     void MagicalContainer::removeFromCross(int val)
@@ -168,12 +224,6 @@ namespace ariel
             prev = curr;
             curr = curr->nextNodeCROSS;
         }
-
-        if (curr == nullptr)
-        {
-            return; // Value not found
-        }
-
         if (prev == nullptr)
         {
             firstNodeCROSS = curr->nextNodeCROSS;
@@ -182,49 +232,43 @@ namespace ariel
         {
             prev->nextNodeCROSS = curr->nextNodeCROSS;
         }
-
-        delete curr;
+        this->setIndexCross();
     }
 
     void MagicalContainer::removeFromPrime(int val)
     {
-        if (!isPrime(val))
+        if (isPrime(val))
         {
-            return; // Value is not prime
-        }
+            Node* curr = firstNodePRIME;
+            Node* prev = nullptr;
 
-        Node* curr = firstNodePRIME;
-        Node* prev = nullptr;
-
-        while (curr != nullptr && curr->value != val)
-        {
-            prev = curr;
-            curr = curr->nextNodePRIME;
+            while (curr != nullptr && curr->value != val)
+            {
+                prev = curr;
+                curr = curr->nextNodePRIME;
+            }
+            if (prev == nullptr)
+            {
+                firstNodePRIME = curr->nextNodePRIME;
+            }
+            else
+            {
+                prev->nextNodePRIME = curr->nextNodePRIME;
+            }
+            this->setIndexPrime();
         }
-
-        if (curr == nullptr)
-        {
-            return; // Value not found
-        }
-
-        if (prev == nullptr)
-        {
-            firstNodePRIME = curr->nextNodePRIME;
-        }
-        else
-        {
-            prev->nextNodePRIME = curr->nextNodePRIME;
-        }
-
-        delete curr;
     }
 
     void MagicalContainer::removeElement(int val)
     {
-        removeFromDefault(val);
-        removeFromASC(val);
-        removeFromCross(val);
-        removeFromPrime(val);
+        if (isInContainer(val))
+        {
+            removeFromDefault(val);
+            removeFromASC(val);
+            removeFromCross(val);
+            removeFromPrime(val);
+            this->containerSize--;
+        }
     }
 
     int MagicalContainer::size()
