@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-
+#include <iterator>
 // typedef enum {DEFAULT = 0, ASCENDING = 1, SIDE_CROSS = 2, PRIME = 3 } ITERATOR_TYPE;
 
 namespace ariel
@@ -103,8 +103,8 @@ namespace ariel
         public:
             AscendingIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
             ~AscendingIterator() = default;
-            Node* firstNode() {return this->getContainer().firstNodeASC;}
-            Node* nextNode() {return this->getCurrNode()->nextNodeASC;}
+            Node* firstNode() override {return this->getContainer().firstNodeASC;}
+            Node* nextNode() override {return this->getCurrNode()->nextNodeASC;}
             // ITERATOR_TYPE getType() {return ASCENDING;}
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
@@ -147,8 +147,8 @@ namespace ariel
         public:
             SideCrossIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
             ~SideCrossIterator() = default;
-            Node* firstNode() {return this->getContainer().firstNodeCROSS;}
-            Node* nextNode() {return this->getCurrNode()->nextNodeCROSS;}
+            Node* firstNode() override {return this->getContainer().firstNodeCROSS;}
+            Node* nextNode() override {return this->getCurrNode()->nextNodeCROSS;}
             // ITERATOR_TYPE getType() {return SIDE_CROSS;}
             MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
