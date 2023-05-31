@@ -50,13 +50,6 @@ TEST_CASE("Container TEST:")
     CHECK_EQ(container.size(), 8); // should stay the same
 }
 
-TEST_CASE("Containers COMP TEST:")
-{
-    MagicalContainer container;
-    MagicalContainer container2;
-    CHECK_FALSE(container == container2);
-}
-
 TEST_CASE("AscendingIterator Simple TEST:")
 {
     int numbers[] = {8, -3, 1, 10};
@@ -67,17 +60,16 @@ TEST_CASE("AscendingIterator Simple TEST:")
     auto lastIT = ascIter.end(); // should be nullptr
     CHECK(myIT < lastIT); // end() iterator is always bigger than begin()
     CHECK(*myIT == -3);
-    CHECK_NOTHROW(myIT++); // -3 -> 1
+    CHECK_NOTHROW(++myIT); // -3 -> 1
     CHECK(*myIT == 1);
-    CHECK_NOTHROW(++myIT); // 1 -> 8
+    ++myIT; // 1 -> 8
     CHECK(*myIT == 8);
 
     auto firstIT = ascIter.begin(); // should be -3
     CHECK(firstIT < myIT); // 8 > -3 in the iterator although 8 added before -3
     CHECK(myIT > firstIT); // 8 > -3 in the iterator although 8 added before -3
-    CHECK_THROWS(lastIT++); // end() cannot be increased
     CHECK_THROWS(++lastIT); // end() cannot be increased
-    myIT++; // 8 -> 10
+    ++myIT; // 8 -> 10
     ++myIT; // 10 -> end
     CHECK(myIT == lastIT); 
 }
@@ -92,13 +84,12 @@ TEST_CASE("SideCrossIterator Simple TEST:")
     auto lastIT = crossIter.end(); // should be nullptr
     CHECK(myIT < lastIT);
     CHECK(*myIT == -3);
-    CHECK_NOTHROW(myIT++); // -3 -> 10
+    CHECK_NOTHROW(++myIT); // -3 -> 10
     CHECK(*myIT == 10);
-    CHECK_NOTHROW(++myIT); // 10 -> 1
+    ++myIT; // 10 -> 1
     CHECK(*myIT == 1);
-    myIT++; // 1 -> 8
+    ++myIT; // 1 -> 8
     CHECK(*myIT == 8); // 8
-    CHECK_THROWS(lastIT++); // end() cannot be increased
     CHECK_THROWS(++lastIT); // end() cannot be increased
 }
 
@@ -112,11 +103,10 @@ TEST_CASE("PrimeIterator Simple TEST:")
     auto lastIT = primeIter.end(); // should be nullptr
     CHECK(myIT < lastIT);
     CHECK(*myIT == 3);
-    CHECK_NOTHROW(myIT++); // 3 -> 7
+    CHECK_NOTHROW(++myIT); // 3 -> 7
     CHECK(*myIT == 7);
     CHECK_NOTHROW(++myIT); // 7 -> 13
     CHECK(*myIT == 13);
-    CHECK_THROWS(lastIT++); // end() cannot be increased
     CHECK_THROWS(++lastIT); // end() cannot be increased
 }
 
@@ -130,23 +120,23 @@ TEST_CASE("AscendingIterator Comparing/Removing/Adding TEST:")
     auto myIT = ascIter.begin(); // should be -1
     for (int i = 0; i < 2; i++)
     {
-        myIT++; // -1 -> 0 -> 3
+        ++myIT; // -1 -> 0 -> 3
     }
     CHECK(*myIT == 3);
     auto copyIT = myIT; // now copyIT should point to the same Node
     CHECK(myIT == copyIT); // they both point to same Node
     container.addElement(7); // so the ASC Order is: -1 -> 0 -> 3 -> 7 -> 11 -> 14
-    copyIT++; // 3 -> 7
+    ++copyIT; // 3 -> 7
     CHECK((*myIT == 3) + (*copyIT == 7) == 2); // both must be true according to iterator logic
     CHECK(myIT < copyIT); // IMPORTANT! since 7 is bigger than 3
-    copyIT++; // 7 -> 11
-    myIT++; // 3 -> 7
-    myIT++; // 7 -> 11
+    ++copyIT; // 7 -> 11
+    ++myIT; // 3 -> 7
+    ++myIT; // 7 -> 11
     container.addElement(16); // so the ASC Order is: -1 -> 0 -> 3 -> 7 -> 11 -> 14 -> 16
-    myIT++; // 11 -> 14
-    myIT++; // 14 -> 16
+    ++myIT; // 11 -> 14
+    ++myIT; // 14 -> 16
     container.removeElement(14); // so the ASC Order is: -1 -> 0 -> 3 -> 7 -> 11 -> 16
-    copyIT++;// 11 -> 16
+    ++copyIT;// 11 -> 16
     CHECK((myIT == copyIT) + (*myIT == *copyIT) == 2); // both must be true
 }
 
@@ -160,17 +150,17 @@ TEST_CASE("SideCrossIterator Comparing/Removing/Adding TEST:")
     MagicalContainer::SideCrossIterator crossIter(container);
     auto myIT = crossIter.begin(); // should be 1
     CHECK(*myIT == 1);
-    myIT++; // 1 -> 5
+    ++myIT; // 1 -> 5
     auto secondIT = myIT; // should be 5
-    myIT++; // 5 -> 2
+    ++myIT; // 5 -> 2
     CHECK((myIT > secondIT) + (*myIT < *secondIT) == 2); // since in side cross 5 < 2 but in value: 2 < 5
     container.removeElement(1); // New Cross Order: 2 -> 5 -> 3 -> 4
     CHECK(myIT < secondIT); // since now in cross order, 2 < 5
     container.addElement(0); // New Cross Order: 0 -> 5 -> 2 -> 4 -> 3
     CHECK(myIT > secondIT); // since now in cross order, 5 < 2
-    secondIT++; 
+    ++secondIT; 
     // now they both at 2
-    secondIT++; // 2 -> 4
+    ++secondIT; // 2 -> 4
     CHECK(myIT < secondIT); // 4 > 2
     container.removeElement(5); // New Cross Order: 0 -> 4 -> 2 -> 3
     CHECK(myIT > secondIT);// 2 > 4
@@ -188,10 +178,10 @@ TEST_CASE("PrimeIterator Comparing/Removing/Adding TEST:")
     container.addElement(2); // New Prime Order: 2 -> 3 -> 7 -> 11
     auto secondIT = primeIter.begin(); // should be 2
     CHECK(myIT > secondIT); // since 3 > 2 in prime order
-    secondIT++; // 2 -> 3
-    myIT++; // 3 -> 7
+    ++secondIT; // 2 -> 3
+    ++myIT; // 3 -> 7
     container.addElement(5); // New Prime Order: 2 -> 3 -> 5 -> 7 -> 11
-    secondIT++; // 3 -> 5
+    ++secondIT; // 3 -> 5
     CHECK(myIT > secondIT); // 7 > 5
 }
 
@@ -211,47 +201,4 @@ TEST_CASE("PrimeIterator Size TEST:")
     MagicalContainer::PrimeIterator primeIter2(container2);
     iterLen = primeIteratorLength(primeIter2);
     CHECK_EQ(iterLen, 0); // since all those numbers are not prime!!!
-
-}
-
-TEST_CASE("Iterator Illegal Operations TEST:")
-{
-    int numbers[] = {8, 5, 4};
-    // Adding: 8 -> 5 -> 4
-    // ASC:    4 -> 5 -> 8
-    // Cross:  4 -> 8 -> 5
-    // Prime:  5
-    MagicalContainer container = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
-    MagicalContainer::AscendingIterator ascIter(container); // 4 -> 5 -> 8
-    MagicalContainer::SideCrossIterator crossIter(container); // 4 -> 8 -> 5
-    MagicalContainer::PrimeIterator primeIter(container); // 5
-
-    auto ascIT = ascIter.begin(); // 4
-    auto crosIT = crossIter.begin(); // 4
-    auto primeIT = primeIter.begin(); // 5
-
-    MagicalContainer container2 = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
-    MagicalContainer::AscendingIterator ascIter2(container); // 4 -> 5 -> 8
-    MagicalContainer::SideCrossIterator crossIter2(container); // 4 -> 8 -> 5
-    MagicalContainer::PrimeIterator primeIter2(container); // 5
-
-    auto ascIT2 = ascIter2.begin(); // 4
-    auto crosIT2 = crossIter2.begin(); // 4
-    auto primeIT2 = primeIter2.begin(); // 5
-
-    // CHECK_THROWS(ascIT == ascIT2); 
-    // CHECK_THROWS(primeIT == primeIT2); 
-    // CHECK_THROWS(crosIT == crosIT2);
-
-    // CHECK_THROWS(ascIT != ascIT2); 
-    // CHECK_THROWS(primeIT != primeIT2); 
-    // CHECK_THROWS(crosIT != crosIT2);
-    
-    // CHECK_THROWS(ascIT > ascIT2); 
-    // CHECK_THROWS(primeIT > primeIT2); 
-    // CHECK_THROWS(crosIT > crosIT2);
-
-    // CHECK_THROWS(ascIT < ascIT2); 
-    // CHECK_THROWS(primeIT < primeIT2); 
-    // CHECK_THROWS(crosIT < crosIT2);
 }

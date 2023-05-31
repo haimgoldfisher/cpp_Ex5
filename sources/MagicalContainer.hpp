@@ -53,57 +53,29 @@ namespace ariel
         void removeFromCross(int);
         void removeFromPrime(int);
         int size();
-        bool operator==(MagicalContainer& other) {return this == &other;}
-        bool operator!=(MagicalContainer& other) {return !(*this == other);}
+        // bool operator==(MagicalContainer& other) {return this == &other;}
+        // bool operator!=(MagicalContainer& other) {return !(*this == other);}
 
         void containerPrinter(); // for self check
         
-        class DefaultIterator
+        class DefaultIterator // abstarct class for iterator, based on adding sort (FIFO)
         {
         private:
-            MagicalContainer& container;
-            Node* currNode;
+            MagicalContainer& container; // reffernce to container
+            Node* currNode; // the node which the iterator points to
         public:
-            DefaultIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : container(container_), currNode(ptr_){}
-            virtual ~DefaultIterator() = default;
-            DefaultIterator(const DefaultIterator&) = default;
-            DefaultIterator& operator=(const DefaultIterator&) = delete;
-            DefaultIterator(DefaultIterator&&) = default;
-            DefaultIterator& operator=(DefaultIterator&&) = delete;
-            virtual Node* firstNode() {return this->getContainer().firstNodeDEFAULT;}
-            virtual Node* nextNode() {return this->getCurrNode()->nextNodeDEFAULT;}
-            // virtual ITERATOR_TYPE getType() {return DEFAULT;}
-            MagicalContainer::DefaultIterator begin() {return DefaultIterator(this->getContainer(), this->firstNode());}
-            MagicalContainer::DefaultIterator end() {return DefaultIterator(this->getContainer(), nullptr);}
-            DefaultIterator operator++(int) 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                DefaultIterator tmp = *this;
-                setCurrNode(nextNode());
-                return tmp;
-		    }
-            DefaultIterator& operator++() 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                setCurrNode(nextNode());
-                return *this;
-		    }
-            bool operator==(DefaultIterator& other) {return this->getIndex() == other.getIndex();}
-            bool operator!=(DefaultIterator other) {return !(*this == other);}
-            bool operator>(DefaultIterator other) {return this->getIndex() > other.getIndex();}
-            bool operator<(DefaultIterator other) {return this->getIndex() < other.getIndex();}
-            int operator*() {return this->getValue();}
-            int getValue() {return this->getCurrNode()->value;}
-            Node* getCurrNode(){return this->currNode;}
-            void setCurrNode(Node* node_){this->currNode = node_;}
-            MagicalContainer& getContainer() {return this->container;}
-            int getIndex() {return this->getCurrNode() == nullptr? this->getContainer().size() : this->getCurrNode()->indexDEFAULT;}
+            DefaultIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : container(container_), currNode(ptr_){} // ctor
+            virtual ~DefaultIterator() = default; // dtor
+            DefaultIterator(const DefaultIterator&) = default; // copy ctor
+            DefaultIterator& operator=(const DefaultIterator&) = delete; // copy assignment operator
+            DefaultIterator(DefaultIterator&&) = default; // move ctor
+            DefaultIterator& operator=(DefaultIterator&&) = delete; // move assignment operator
+            virtual Node* firstNode() = 0; // first node getter (virtual)
+            virtual Node* nextNode() = 0; // next node getter (virtual)
+            int getValue() {return this->getCurrNode()->value;} // value getter
+            Node* getCurrNode(){return this->currNode;} // curr node getter
+            void setCurrNode(Node* node_){this->currNode = node_;} // curr node setter
+            MagicalContainer& getContainer() {return this->container;} // container getter
         };
 
         class AscendingIterator : DefaultIterator
@@ -117,36 +89,10 @@ namespace ariel
             AscendingIterator& operator=(AscendingIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodeASC;}
             Node* nextNode() override {return this->getCurrNode()->nextNodeASC;}
-            // ITERATOR_TYPE getType() {return ASCENDING;}
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
-            AscendingIterator operator++(int) 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                AscendingIterator tmp = *this;
-                setCurrNode(nextNode());
-                return tmp;
-		    }
-            AscendingIterator& operator++() 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                setCurrNode(nextNode());
-                return *this;
-		    }
-            bool operator==(AscendingIterator& other)
-            {
-                if (this->getContainer() != other.getContainer())
-                {
-                    throw std::runtime_error("cannot compare iterators of different containers!");
-                }
-                return this->getIndex() == other.getIndex();
-            }
+            AscendingIterator& operator++();
+            bool operator==(AscendingIterator& other){return this->getIndex() == other.getIndex();}
             bool operator!=(AscendingIterator other) {return !(*this == other);}
             bool operator>(AscendingIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(AscendingIterator other) {return this->getIndex() < other.getIndex();}
@@ -165,28 +111,9 @@ namespace ariel
             SideCrossIterator& operator=(SideCrossIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodeCROSS;}
             Node* nextNode() override {return this->getCurrNode()->nextNodeCROSS;}
-            // ITERATOR_TYPE getType() {return SIDE_CROSS;}
             MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
-            SideCrossIterator operator++(int) 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                SideCrossIterator tmp = *this;
-                setCurrNode(nextNode());
-                return tmp;
-		    }
-            SideCrossIterator& operator++() 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                setCurrNode(nextNode());
-                return *this;
-		    }
+            SideCrossIterator& operator++();
             bool operator==(SideCrossIterator& other){return this->getIndex() == other.getIndex();}
             bool operator!=(SideCrossIterator other) {return !(*this == other);}
             bool operator>(SideCrossIterator other) {return this->getIndex() > other.getIndex();}
@@ -206,28 +133,9 @@ namespace ariel
             PrimeIterator& operator=(PrimeIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodePRIME;}
             Node* nextNode() override {return this->getCurrNode()->nextNodePRIME;}
-            // ITERATOR_TYPE getType() override {return PRIME;}
             MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::PrimeIterator end() {return PrimeIterator(this->getContainer(), nullptr);}
-            PrimeIterator operator++(int) 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                PrimeIterator tmp = *this;
-                setCurrNode(nextNode());
-                return tmp;
-		    }
-            PrimeIterator& operator++() 
-            {
-                if (this->getCurrNode() == nullptr)
-                {
-                    throw std::runtime_error("the iterator is at the end!");
-                }
-                setCurrNode(nextNode());
-                return *this;
-		    }
+            PrimeIterator& operator++();
             bool operator==(PrimeIterator& other) {return this->getIndex() == other.getIndex();}
             bool operator!=(PrimeIterator other) {return !(*this == other);}
             bool operator>(PrimeIterator other) {return this->getIndex() > other.getIndex();}

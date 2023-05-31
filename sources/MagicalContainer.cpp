@@ -316,6 +316,36 @@ namespace ariel
         std::cout << std::endl;
     }
 
+    MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator++() 
+    {
+        if (this->getCurrNode() == nullptr)
+        {
+            throw std::runtime_error("the iterator is at the end!");
+        }
+        setCurrNode(nextNode());
+        return *this;
+    }
+
+    MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() 
+    {
+        if (this->getCurrNode() == nullptr)
+        {
+            throw std::runtime_error("the iterator is at the end!");
+        }
+        setCurrNode(nextNode());
+        return *this;
+    }
+
+    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() 
+    {
+        if (this->getCurrNode() == nullptr)
+        {
+            throw std::runtime_error("the iterator is at the end!");
+        }
+        setCurrNode(nextNode());
+        return *this;
+    }
+
     bool isPrime(int num)
     {
         if (num <= 1)
