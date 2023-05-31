@@ -50,6 +50,15 @@ TEST_CASE("Container TEST:")
     CHECK_EQ(container.size(), 8); // should stay the same
 }
 
+TEST_CASE("AscendingIterator Empty TEST")
+{
+    MagicalContainer container;
+    MagicalContainer::AscendingIterator ascIter(container);
+    auto begin = ascIter.begin();
+    auto end = ascIter.end();
+    CHECK(begin == end); // since container is empty
+}
+
 TEST_CASE("AscendingIterator Simple TEST:")
 {
     int numbers[] = {8, -3, 1, 10};
@@ -74,6 +83,15 @@ TEST_CASE("AscendingIterator Simple TEST:")
     CHECK(myIT == lastIT); 
 }
 
+TEST_CASE("SideCrossIterator Empty TEST")
+{
+    MagicalContainer container;
+    MagicalContainer::SideCrossIterator crossIter(container);
+    auto begin = crossIter.begin();
+    auto end = crossIter.end();
+    CHECK(begin == end); // since container is empty
+}
+
 TEST_CASE("SideCrossIterator Simple TEST:")
 {
     int numbers[] = {8, -3, 1, 10};
@@ -91,6 +109,15 @@ TEST_CASE("SideCrossIterator Simple TEST:")
     ++myIT; // 1 -> 8
     CHECK(*myIT == 8); // 8
     CHECK_THROWS(++lastIT); // end() cannot be increased
+}
+
+TEST_CASE("PrimeIterator Empty TEST")
+{
+    MagicalContainer container;
+    MagicalContainer::PrimeIterator primeIter(container);
+    auto begin = primeIter.begin();
+    auto end = primeIter.end();
+    CHECK(begin == end); // since container is empty
 }
 
 TEST_CASE("PrimeIterator Simple TEST:")
