@@ -33,6 +33,10 @@ namespace ariel
     public:
         MagicalContainer();
         ~MagicalContainer();
+        MagicalContainer(const MagicalContainer&) = default;
+        MagicalContainer& operator=(const MagicalContainer&) = delete;
+        MagicalContainer(MagicalContainer&&) = default;
+        MagicalContainer& operator=(MagicalContainer&&) = delete;
         bool isInContainer(int); // check if a value is already in container
         void addElement(int);
         void addToDefault(Node*); // adding order (FIFO)
@@ -61,7 +65,11 @@ namespace ariel
             Node* currNode;
         public:
             DefaultIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : container(container_), currNode(ptr_){}
-            ~DefaultIterator() = default;
+            virtual ~DefaultIterator() = default;
+            DefaultIterator(const DefaultIterator&) = default;
+            DefaultIterator& operator=(const DefaultIterator&) = delete;
+            DefaultIterator(DefaultIterator&&) = default;
+            DefaultIterator& operator=(DefaultIterator&&) = delete;
             virtual Node* firstNode() {return this->getContainer().firstNodeDEFAULT;}
             virtual Node* nextNode() {return this->getCurrNode()->nextNodeDEFAULT;}
             // virtual ITERATOR_TYPE getType() {return DEFAULT;}
@@ -102,7 +110,11 @@ namespace ariel
         {
         public:
             AscendingIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
-            ~AscendingIterator() = default;
+            ~AscendingIterator() override = default;
+            AscendingIterator(const AscendingIterator&) = default;
+            AscendingIterator& operator=(const AscendingIterator&) = delete;
+            AscendingIterator(AscendingIterator&&) = default;
+            AscendingIterator& operator=(AscendingIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodeASC;}
             Node* nextNode() override {return this->getCurrNode()->nextNodeASC;}
             // ITERATOR_TYPE getType() {return ASCENDING;}
@@ -146,7 +158,11 @@ namespace ariel
         {
         public:
             SideCrossIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
-            ~SideCrossIterator() = default;
+            ~SideCrossIterator() override = default;
+            SideCrossIterator(const SideCrossIterator&) = default;
+            SideCrossIterator& operator=(const SideCrossIterator&) = delete;
+            SideCrossIterator(SideCrossIterator&&) = default;
+            SideCrossIterator& operator=(SideCrossIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodeCROSS;}
             Node* nextNode() override {return this->getCurrNode()->nextNodeCROSS;}
             // ITERATOR_TYPE getType() {return SIDE_CROSS;}
@@ -183,7 +199,11 @@ namespace ariel
         {
         public:
             PrimeIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
-            ~PrimeIterator() = default;
+            ~PrimeIterator() override = default;
+            PrimeIterator(const PrimeIterator&) = default;
+            PrimeIterator& operator=(const PrimeIterator&) = delete;
+            PrimeIterator(PrimeIterator&&) = default;
+            PrimeIterator& operator=(PrimeIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodePRIME;}
             Node* nextNode() override {return this->getCurrNode()->nextNodePRIME;}
             // ITERATOR_TYPE getType() override {return PRIME;}

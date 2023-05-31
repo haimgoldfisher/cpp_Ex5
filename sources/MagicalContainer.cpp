@@ -4,16 +4,16 @@ namespace ariel
 {
     MagicalContainer::MagicalContainer() : firstNodeDEFAULT(nullptr), firstNodeASC(nullptr), firstNodeCROSS(nullptr), firstNodePRIME(nullptr), containerSize(0) {}
 
-    MagicalContainer::~MagicalContainer() 
+    MagicalContainer::~MagicalContainer()
     {
-        if (this->containerSize > 0) // so there are nodes to delete
+        if (this->size() > 0)
         {
-            Node* curr = this->firstNodeDEFAULT;
+            Node* curr = firstNodeDEFAULT;
             while (curr != nullptr)
             {
-                Node* temp = curr->nextNodeDEFAULT;
-                delete curr; // free the curr Node
-                curr = temp; // move to next
+                Node* next = curr->nextNodeDEFAULT;
+                delete curr;
+                curr = next;
             }
         }
     }
@@ -322,7 +322,6 @@ namespace ariel
         {
             return false;
         }
-
         for (int i = 2; i * i <= num; ++i)
         {
             if (num % i == 0)
@@ -330,7 +329,6 @@ namespace ariel
                 return false;
             }
         }
-
         return true;
     }
 }
