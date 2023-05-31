@@ -53,7 +53,7 @@ namespace ariel
         void removeFromCross(int);
         void removeFromPrime(int);
         int size();
-        bool operator==(MagicalContainer& other) {return this->firstNodeDEFAULT == other.firstNodeDEFAULT;}
+        bool operator==(MagicalContainer& other) {return this == &other;}
         bool operator!=(MagicalContainer& other) {return !(*this == other);}
 
         void containerPrinter(); // for self check
@@ -141,9 +141,9 @@ namespace ariel
 		    }
             bool operator==(AscendingIterator& other)
             {
-                if(this->getContainer() != other.getContainer())
+                if (this->getContainer() != other.getContainer())
                 {
-                    throw std::runtime_error("dif containers");
+                    throw std::runtime_error("cannot compare iterators of different containers!");
                 }
                 return this->getIndex() == other.getIndex();
             }

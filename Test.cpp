@@ -50,6 +50,13 @@ TEST_CASE("Container TEST:")
     CHECK_EQ(container.size(), 8); // should stay the same
 }
 
+TEST_CASE("Containers COMP TEST:")
+{
+    MagicalContainer container;
+    MagicalContainer container2;
+    CHECK_FALSE(container == container2);
+}
+
 TEST_CASE("AscendingIterator Simple TEST:")
 {
     int numbers[] = {8, -3, 1, 10};
@@ -198,6 +205,13 @@ TEST_CASE("PrimeIterator Size TEST:")
     container.addElement(8);
     iterLen = primeIteratorLength(primeIter);
     CHECK_NE(container.size(), iterLen); // size = 6, iter len is still 5
+
+    int nonPrimeNumbers[] = {-5, -2, -1, 0, 1};
+    MagicalContainer container2 = createContainer(nonPrimeNumbers, sizeof(nonPrimeNumbers) / sizeof(nonPrimeNumbers[0]));
+    MagicalContainer::PrimeIterator primeIter2(container2);
+    iterLen = primeIteratorLength(primeIter2);
+    CHECK_EQ(iterLen, 0); // since all those numbers are not prime!!!
+
 }
 
 TEST_CASE("Iterator Illegal Operations TEST:")
