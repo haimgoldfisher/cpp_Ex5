@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-typedef enum {DEFAULT = 0, ASCENDING = 1, SIDE_CROSS = 2, PRIME = 3 } ITERATOR_TYPE;
+// typedef enum {DEFAULT = 0, ASCENDING = 1, SIDE_CROSS = 2, PRIME = 3 } ITERATOR_TYPE;
 
 namespace ariel
 {
@@ -49,6 +49,8 @@ namespace ariel
         void removeFromCross(int);
         void removeFromPrime(int);
         int size();
+        bool operator==(MagicalContainer& other) {return this->firstNodeDEFAULT == other.firstNodeDEFAULT;}
+        bool operator!=(MagicalContainer& other) {return !(*this == other);}
 
         void containerPrinter(); // for self check
         
@@ -62,7 +64,7 @@ namespace ariel
             ~DefaultIterator() = default;
             virtual Node* firstNode() {return this->getContainer().firstNodeDEFAULT;}
             virtual Node* nextNode() {return this->getCurrNode()->nextNodeDEFAULT;}
-            virtual ITERATOR_TYPE getType() {return DEFAULT;}
+            // virtual ITERATOR_TYPE getType() {return DEFAULT;}
             MagicalContainer::DefaultIterator begin() {return DefaultIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::DefaultIterator end() {return DefaultIterator(this->getContainer(), nullptr);}
             DefaultIterator operator++(int) 
@@ -84,14 +86,7 @@ namespace ariel
                 setCurrNode(nextNode());
                 return *this;
 		    }
-            bool operator==(DefaultIterator& other)
-            {
-                if (this->getType() != other.getType()) // check if the refer to same container?
-                {
-                    throw std::runtime_error("");
-                }
-                return this->getIndex() == other.getIndex();
-            }
+            bool operator==(DefaultIterator& other) {return this->getIndex() == other.getIndex();}
             bool operator!=(DefaultIterator other) {return !(*this == other);}
             bool operator>(DefaultIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(DefaultIterator other) {return this->getIndex() < other.getIndex();}
@@ -110,7 +105,7 @@ namespace ariel
             ~AscendingIterator() = default;
             Node* firstNode() {return this->getContainer().firstNodeASC;}
             Node* nextNode() {return this->getCurrNode()->nextNodeASC;}
-            ITERATOR_TYPE getType() {return ASCENDING;}
+            // ITERATOR_TYPE getType() {return ASCENDING;}
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
             AscendingIterator operator++(int) 
@@ -134,9 +129,9 @@ namespace ariel
 		    }
             bool operator==(AscendingIterator& other)
             {
-                if (this->getType() != other.getType()) // check if the refer to same container?
+                if(this->getContainer() != other.getContainer())
                 {
-                    throw std::runtime_error("");
+                    throw std::runtime_error("dif containers");
                 }
                 return this->getIndex() == other.getIndex();
             }
@@ -154,7 +149,7 @@ namespace ariel
             ~SideCrossIterator() = default;
             Node* firstNode() {return this->getContainer().firstNodeCROSS;}
             Node* nextNode() {return this->getCurrNode()->nextNodeCROSS;}
-            ITERATOR_TYPE getType() {return SIDE_CROSS;}
+            // ITERATOR_TYPE getType() {return SIDE_CROSS;}
             MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
             SideCrossIterator operator++(int) 
@@ -176,14 +171,7 @@ namespace ariel
                 setCurrNode(nextNode());
                 return *this;
 		    }
-            bool operator==(SideCrossIterator& other)
-            {
-                if (this->getType() != other.getType()) // check if the refer to same container?
-                {
-                    throw std::runtime_error("");
-                }
-                return this->getIndex() == other.getIndex();
-            }
+            bool operator==(SideCrossIterator& other){return this->getIndex() == other.getIndex();}
             bool operator!=(SideCrossIterator other) {return !(*this == other);}
             bool operator>(SideCrossIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(SideCrossIterator other) {return this->getIndex() < other.getIndex();}
@@ -198,7 +186,7 @@ namespace ariel
             ~PrimeIterator() = default;
             Node* firstNode() override {return this->getContainer().firstNodePRIME;}
             Node* nextNode() override {return this->getCurrNode()->nextNodePRIME;}
-            ITERATOR_TYPE getType() override {return PRIME;}
+            // ITERATOR_TYPE getType() override {return PRIME;}
             MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::PrimeIterator end() {return PrimeIterator(this->getContainer(), nullptr);}
             PrimeIterator operator++(int) 
@@ -220,14 +208,7 @@ namespace ariel
                 setCurrNode(nextNode());
                 return *this;
 		    }
-            bool operator==(PrimeIterator& other)
-            {
-                if (this->getType() != other.getType()) // check if the refer to same container?
-                {
-                    throw std::runtime_error("");
-                }
-                return this->getIndex() == other.getIndex();
-            }
+            bool operator==(PrimeIterator& other) {return this->getIndex() == other.getIndex();}
             bool operator!=(PrimeIterator other) {return !(*this == other);}
             bool operator>(PrimeIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(PrimeIterator other) {return this->getIndex() < other.getIndex();}
@@ -238,4 +219,3 @@ namespace ariel
 
     bool isPrime(int);
 }
-

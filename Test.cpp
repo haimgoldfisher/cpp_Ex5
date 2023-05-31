@@ -216,22 +216,6 @@ TEST_CASE("Iterator Illegal Operations TEST:")
     auto crosIT = crossIter.begin(); // 4
     auto primeIT = primeIter.begin(); // 5
 
-    // CHECK_THROWS(ascIT == crosIT); 
-    // CHECK_THROWS(ascIT == primeIT); 
-    // CHECK_THROWS(crosIT == primeIT);
-
-    // CHECK_THROWS(ascIT != crosIT); 
-    // CHECK_THROWS(ascIT != primeIT); 
-    // CHECK_THROWS(crosIT != primeIT);
-
-    // CHECK_THROWS(ascIT < crosIT); 
-    // CHECK_THROWS(ascIT < primeIT); 
-    // CHECK_THROWS(crosIT < primeIT);
-
-    // CHECK_THROWS(ascIT > crosIT); 
-    // CHECK_THROWS(ascIT > primeIT); 
-    // CHECK_THROWS(crosIT > primeIT);
-
     MagicalContainer container2 = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
     MagicalContainer::AscendingIterator ascIter2(container); // 4 -> 5 -> 8
     MagicalContainer::SideCrossIterator crossIter2(container); // 4 -> 8 -> 5

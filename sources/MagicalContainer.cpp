@@ -191,6 +191,7 @@ namespace ariel
             prev->nextNodeDEFAULT = curr->nextNodeDEFAULT;
         }
         this->setIndexDefault();
+        delete curr; // this is the last time so it can delete the node
     }
 
     void MagicalContainer::removeFromASC(int val)
@@ -263,10 +264,10 @@ namespace ariel
     {
         if (isInContainer(val))
         {
-            removeFromDefault(val);
             removeFromASC(val);
             removeFromCross(val);
             removeFromPrime(val);
+            removeFromDefault(val); // + the actual delete of the node
             this->containerSize--;
         }
     }
