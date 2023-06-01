@@ -229,3 +229,57 @@ TEST_CASE("PrimeIterator Size TEST:")
     iterLen = primeIteratorLength(primeIter2);
     CHECK_EQ(iterLen, 0); // since all those numbers are not prime!!!
 }
+
+// TEST_CASE("Iterator Illegal Operations TEST:")
+// {
+//     int numbers[] = {8, 5, 4};
+//     // Adding: 8 -> 5 -> 4
+//     // ASC:    4 -> 5 -> 8
+//     // Cross:  4 -> 8 -> 5
+//     // Prime:  5
+//     MagicalContainer container = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
+//     MagicalContainer::AscendingIterator ascIter(container); // 4 -> 5 -> 8
+//     MagicalContainer::SideCrossIterator crossIter(container); // 4 -> 8 -> 5
+//     MagicalContainer::PrimeIterator primeIter(container); // 5
+//     auto ascIT = ascIter.begin(); // 4
+//     auto crosIT = crossIter.begin(); // 4
+//     auto primeIT = primeIter.begin(); // 5
+
+//     CHECK_THROWS(ascIT == crosIT); 
+//     CHECK_THROWS(ascIT == primeIT); 
+//     CHECK_THROWS(crosIT == primeIT);
+
+//     CHECK_THROWS(ascIT != crosIT); 
+//     CHECK_THROWS(ascIT != primeIT); 
+//     CHECK_THROWS(crosIT != primeIT);
+
+//     CHECK_THROWS(ascIT < crosIT); 
+//     CHECK_THROWS(ascIT < primeIT); 
+//     CHECK_THROWS(crosIT < primeIT);
+
+//     CHECK_THROWS(ascIT > crosIT); 
+//     CHECK_THROWS(ascIT > primeIT); 
+//     CHECK_THROWS(crosIT > primeIT);
+
+//     MagicalContainer container2 = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
+//     MagicalContainer::AscendingIterator ascIter2(container); // 4 -> 5 -> 8
+//     MagicalContainer::SideCrossIterator crossIter2(container); // 4 -> 8 -> 5
+//     MagicalContainer::PrimeIterator primeIter2(container); // 5
+//     auto ascIT2 = ascIter2.begin(); // 4
+//     auto crosIT2 = crossIter2.begin(); // 4
+//     auto primeIT2 = primeIter2.begin(); // 5
+
+//     CHECK_THROWS(ascIT == ascIT2); 
+//     CHECK_THROWS(primeIT == primeIT2); 
+//     CHECK_THROWS(crosIT == crosIT2);
+//     CHECK_THROWS(ascIT != ascIT2); 
+//     CHECK_THROWS(primeIT != primeIT2); 
+//     CHECK_THROWS(crosIT != crosIT2);
+    
+//     CHECK_THROWS(ascIT > ascIT2); 
+//     CHECK_THROWS(primeIT > primeIT2); 
+//     CHECK_THROWS(crosIT > crosIT2);
+//     CHECK_THROWS(ascIT < ascIT2); 
+//     CHECK_THROWS(primeIT < primeIT2); 
+//     CHECK_THROWS(crosIT < crosIT2);
+// }

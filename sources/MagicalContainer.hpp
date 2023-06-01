@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <iterator>
-// typedef enum {DEFAULT = 0, ASCENDING = 1, SIDE_CROSS = 2, PRIME = 3 } ITERATOR_TYPE;
 
 namespace ariel
 {
@@ -92,7 +91,8 @@ namespace ariel
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
             AscendingIterator& operator++();
-            bool operator==(AscendingIterator& other){return this->getIndex() == other.getIndex();}
+            template <typename IT>
+            bool operator==(IT& other){return this->getIndex() == other.getIndex();}
             bool operator!=(AscendingIterator other) {return !(*this == other);}
             bool operator>(AscendingIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(AscendingIterator other) {return this->getIndex() < other.getIndex();}
