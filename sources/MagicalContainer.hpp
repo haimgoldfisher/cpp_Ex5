@@ -52,8 +52,6 @@ namespace ariel
         void removeFromCross(int);
         void removeFromPrime(int);
         int size();
-        // bool operator==(MagicalContainer& other) {return this == &other;}
-        // bool operator!=(MagicalContainer& other) {return !(*this == other);}
 
         void containerPrinter(); // for self check
         
@@ -91,8 +89,7 @@ namespace ariel
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
             AscendingIterator& operator++();
-            template <typename IT>
-            bool operator==(IT& other){return this->getIndex() == other.getIndex();}
+            bool operator==(AscendingIterator other){return this->getIndex() == other.getIndex();}
             bool operator!=(AscendingIterator other) {return !(*this == other);}
             bool operator>(AscendingIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(AscendingIterator other) {return this->getIndex() < other.getIndex();}
@@ -114,7 +111,7 @@ namespace ariel
             MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
             SideCrossIterator& operator++();
-            bool operator==(SideCrossIterator& other){return this->getIndex() == other.getIndex();}
+            bool operator==(SideCrossIterator other){return this->getIndex() == other.getIndex();}
             bool operator!=(SideCrossIterator other) {return !(*this == other);}
             bool operator>(SideCrossIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(SideCrossIterator other) {return this->getIndex() < other.getIndex();}
@@ -136,7 +133,7 @@ namespace ariel
             MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->getContainer(), this->firstNode());}
             MagicalContainer::PrimeIterator end() {return PrimeIterator(this->getContainer(), nullptr);}
             PrimeIterator& operator++();
-            bool operator==(PrimeIterator& other) {return this->getIndex() == other.getIndex();}
+            bool operator==(PrimeIterator other) {return this->getIndex() == other.getIndex();}
             bool operator!=(PrimeIterator other) {return !(*this == other);}
             bool operator>(PrimeIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(PrimeIterator other) {return this->getIndex() < other.getIndex();}
