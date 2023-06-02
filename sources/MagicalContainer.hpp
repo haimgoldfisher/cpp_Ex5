@@ -53,6 +53,8 @@ namespace ariel
         void removeFromCross(int);
         void removeFromPrime(int);
         int size();
+        bool operator==(MagicalContainer& other) {return this->firstNodeDEFAULT == other.firstNodeDEFAULT;}
+        bool operator!=(MagicalContainer& other) {return !(*this == other);}
 
         void containerPrinter(); // for self check
         
@@ -66,7 +68,7 @@ namespace ariel
             DefaultIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
             virtual ~DefaultIterator() = default; // dtor
             DefaultIterator(const DefaultIterator&) = default; // copy ctor
-            DefaultIterator& operator=(const DefaultIterator&) = delete; // copy assignment operator
+            DefaultIterator& operator=(DefaultIterator&); // copy assignment operator
             DefaultIterator(DefaultIterator&&) = default; // move ctor
             DefaultIterator& operator=(DefaultIterator&&) = delete; // move assignment operator
             virtual Node* firstNode() = 0; // first node getter (virtual)
@@ -84,7 +86,7 @@ namespace ariel
             AscendingIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
             ~AscendingIterator() override = default;
             AscendingIterator(const AscendingIterator&) = default;
-            AscendingIterator& operator=(const AscendingIterator&) = delete;
+            AscendingIterator& operator=(AscendingIterator&);
             AscendingIterator(AscendingIterator&&) = default;
             AscendingIterator& operator=(AscendingIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodeASC;}
@@ -107,7 +109,7 @@ namespace ariel
             SideCrossIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
             ~SideCrossIterator() override = default;
             SideCrossIterator(const SideCrossIterator&) = default;
-            SideCrossIterator& operator=(const SideCrossIterator&) = delete;
+            SideCrossIterator& operator=(SideCrossIterator&);
             SideCrossIterator(SideCrossIterator&&) = default;
             SideCrossIterator& operator=(SideCrossIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodeCROSS;}
@@ -130,7 +132,7 @@ namespace ariel
             PrimeIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
             ~PrimeIterator() override = default;
             PrimeIterator(const PrimeIterator&) = default;
-            PrimeIterator& operator=(const PrimeIterator&) = delete;
+            PrimeIterator& operator=(PrimeIterator&);
             PrimeIterator(PrimeIterator&&) = default;
             PrimeIterator& operator=(PrimeIterator&&) = delete;
             Node* firstNode() override {return this->getContainer().firstNodePRIME;}

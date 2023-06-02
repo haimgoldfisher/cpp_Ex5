@@ -385,6 +385,46 @@ namespace ariel
         return *this;
     }
 
+    MagicalContainer::DefaultIterator& MagicalContainer::DefaultIterator::operator=(MagicalContainer::DefaultIterator& other)
+    {
+        if (this->getContainer() != other.getContainer())
+        {
+            throw std::runtime_error("different containers!");
+        }
+        this->setCurrNode(other.getCurrNode());
+        return *this;
+    }
+
+        MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(MagicalContainer::AscendingIterator& other)
+    {
+        if (this->getContainer() != other.getContainer())
+        {
+            throw std::runtime_error("different containers!");
+        }
+        this->setCurrNode(other.getCurrNode());
+        return *this;
+    }
+
+        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator& other)
+    {
+        if (this->getContainer() != other.getContainer())
+        {
+            throw std::runtime_error("different containers!");
+        }
+        this->setCurrNode(other.getCurrNode());
+        return *this;
+    }
+
+    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(MagicalContainer::PrimeIterator& other)
+    {
+        if (this->getContainer() != other.getContainer())
+        {
+            throw std::runtime_error("different containers!");
+        }
+        this->setCurrNode(other.getCurrNode());
+        return *this;
+    }
+
     bool isPrime(int num)
     {
         if (num <= 1)
