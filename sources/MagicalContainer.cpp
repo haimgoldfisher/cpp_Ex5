@@ -18,6 +18,39 @@ namespace ariel
         }
     }
 
+    void MagicalContainer::reOrderCross() 
+    {
+        if (containerSize > 1)
+        {
+            Node** arr = new Node*[static_cast<size_t>(containerSize)];
+            Node* curr = firstNodeASC;
+            int index = 0; // Ascending Order: 2 -> 17 -> 25 
+            while (index < containerSize) {
+                arr[index] = curr;
+                curr = curr->nextNodeASC;
+                index+=2;
+            }
+            index == containerSize? index-- : index-=3;
+            while (index > -1) {
+                arr[index] = curr;
+                curr = curr->nextNodeASC;
+                index-=2;
+            }
+            // now the helper arr contains the Side Cross Order 
+            this->firstNodeCROSS = arr[0];
+            curr = firstNodeCROSS;
+            for (int i = 1; i < containerSize; i++)
+            {
+                curr->nextNodeCROSS = arr[i];
+                curr = arr[i];
+                // std::cout << curr->value << std::endl;
+
+            }
+            curr->nextNodeCROSS = nullptr;
+            delete[] arr;
+        }
+    }
+
     void MagicalContainer::addToDefault(Node* newNode)
     {
         if (firstNodeDEFAULT == nullptr)
@@ -56,7 +89,8 @@ namespace ariel
         }
         this->setIndexASC();
     }
-    void MagicalContainer::addToCross(Node* newNode) // implement later
+
+    void MagicalContainer::addToCross(Node* newNode)
     {
         if (firstNodeCROSS == nullptr)
         {
@@ -65,12 +99,11 @@ namespace ariel
         else
         {
             Node* curr = firstNodeCROSS;
-            while (curr->nextNodeCROSS != nullptr)
-            {
-                curr = curr->nextNodeCROSS;
-            }
-            curr->nextNodeCROSS = newNode;
+            firstNodeCROSS = newNode;
+            newNode->nextNodeCROSS = curr;
+            
         }
+        this->reOrderCross();
         this->setIndexCross();
     }
 
@@ -163,12 +196,12 @@ namespace ariel
     {
         if (!isInContainer(val)) // every value is unique
         {
+            this->containerSize++;
             Node* newNode = new Node(val);
             addToDefault(newNode); 
             addToASC(newNode);
             addToCross(newNode);
             addToPrime(newNode);
-            this->containerSize++;
         }
     }
 
@@ -233,6 +266,7 @@ namespace ariel
         {
             prev->nextNodeCROSS = curr->nextNodeCROSS;
         }
+        reOrderCross();
         this->setIndexCross();
     }
 
@@ -264,12 +298,17 @@ namespace ariel
     {
         if (isInContainer(val))
         {
+            this->containerSize--;
             removeFromASC(val);
             removeFromCross(val);
             removeFromPrime(val);
             removeFromDefault(val); // + the actual delete of the node
-            this->containerSize--;
         }
+        else
+        {
+            throw std::runtime_error("elements does not exist in container!");
+        }
+        
     }
 
     int MagicalContainer::size()

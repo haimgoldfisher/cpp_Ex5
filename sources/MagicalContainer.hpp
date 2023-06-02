@@ -37,6 +37,7 @@ namespace ariel
         MagicalContainer(MagicalContainer&&) = default;
         MagicalContainer& operator=(MagicalContainer&&) = delete;
         bool isInContainer(int); // check if a value is already in container
+        void reOrderCross();
         void addElement(int);
         void addToDefault(Node*); // adding order (FIFO)
         void addToASC(Node*); // order by value
@@ -61,7 +62,8 @@ namespace ariel
             MagicalContainer& container; // reffernce to container
             Node* currNode; // the node which the iterator points to
         public:
-            DefaultIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : container(container_), currNode(ptr_){} // ctor
+            DefaultIterator(MagicalContainer& container_) : container(container_){this->currNode = this->container.firstNodeDEFAULT;} // default ctor
+            DefaultIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
             virtual ~DefaultIterator() = default; // dtor
             DefaultIterator(const DefaultIterator&) = default; // copy ctor
             DefaultIterator& operator=(const DefaultIterator&) = delete; // copy assignment operator
@@ -78,7 +80,8 @@ namespace ariel
         class AscendingIterator : DefaultIterator
         {
         public:
-            AscendingIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
+            AscendingIterator(MagicalContainer& container_) : DefaultIterator(container_){this->setCurrNode(this->getContainer().firstNodeASC);}
+            AscendingIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
             ~AscendingIterator() override = default;
             AscendingIterator(const AscendingIterator&) = default;
             AscendingIterator& operator=(const AscendingIterator&) = delete;
@@ -100,7 +103,8 @@ namespace ariel
         class SideCrossIterator : DefaultIterator
         {
         public:
-            SideCrossIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
+            SideCrossIterator(MagicalContainer& container_) : DefaultIterator(container_){this->setCurrNode(this->getContainer().firstNodeCROSS);}
+            SideCrossIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
             ~SideCrossIterator() override = default;
             SideCrossIterator(const SideCrossIterator&) = default;
             SideCrossIterator& operator=(const SideCrossIterator&) = delete;
@@ -122,7 +126,8 @@ namespace ariel
         class PrimeIterator : DefaultIterator
         {
         public:
-            PrimeIterator(MagicalContainer& container_, Node* ptr_ = nullptr) : DefaultIterator(container_, ptr_){}
+            PrimeIterator(MagicalContainer& container_) : DefaultIterator(container_){this->setCurrNode(this->getContainer().firstNodePRIME);}
+            PrimeIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
             ~PrimeIterator() override = default;
             PrimeIterator(const PrimeIterator&) = default;
             PrimeIterator& operator=(const PrimeIterator&) = delete;
