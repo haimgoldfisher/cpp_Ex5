@@ -57,95 +57,77 @@ namespace ariel
         bool operator!=(MagicalContainer& other) {return !(*this == other);}
 
         void containerPrinter(); // for self check
-        
-        class DefaultIterator // abstarct class for iterator, based on adding sort (FIFO)
+
+        class AscendingIterator
         {
         private:
             MagicalContainer& container; // reffernce to container
             Node* currNode; // the node which the iterator points to
         public:
-            DefaultIterator(MagicalContainer& container_) : container(container_){this->currNode = this->container.firstNodeDEFAULT;} // default ctor
-            DefaultIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
-            virtual ~DefaultIterator() = default; // dtor
-            DefaultIterator(const DefaultIterator&) = default; // copy ctor
-            DefaultIterator& operator=(DefaultIterator&); // copy assignment operator
-            DefaultIterator(DefaultIterator&&) = default; // move ctor
-            DefaultIterator& operator=(DefaultIterator&&) = delete; // move assignment operator
-            virtual Node* firstNode() = 0; // first node getter (virtual)
-            virtual Node* nextNode() = 0; // next node getter (virtual)
-            int getValue() {return this->getCurrNode()->value;} // value getter
-            Node* getCurrNode(){return this->currNode;} // curr node getter
-            void setCurrNode(Node* node_){this->currNode = node_;} // curr node setter
-            MagicalContainer& getContainer() {return this->container;} // container getter
-        };
-
-        class AscendingIterator : DefaultIterator
-        {
-        public:
-            AscendingIterator(MagicalContainer& container_) : DefaultIterator(container_){this->setCurrNode(this->getContainer().firstNodeASC);}
-            AscendingIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
-            ~AscendingIterator() override = default;
+            AscendingIterator(MagicalContainer& container_) : container(container_), currNode(this->container.firstNodeASC){} // default ctor
+            AscendingIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
+            ~AscendingIterator() = default;
             AscendingIterator(const AscendingIterator&) = default;
-            AscendingIterator& operator=(AscendingIterator&);
+            AscendingIterator& operator=(const AscendingIterator&);
             AscendingIterator(AscendingIterator&&) = default;
             AscendingIterator& operator=(AscendingIterator&&) = delete;
-            Node* firstNode() override {return this->getContainer().firstNodeASC;}
-            Node* nextNode() override {return this->getCurrNode()->nextNodeASC;}
-            MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->firstNode());}
-            MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
+            MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->container, this->container.firstNodeASC);}
+            MagicalContainer::AscendingIterator end() {return AscendingIterator(this->container, nullptr);}
             AscendingIterator& operator++();
             bool operator==(AscendingIterator other){return this->getIndex() == other.getIndex();}
             bool operator!=(AscendingIterator other) {return !(*this == other);}
             bool operator>(AscendingIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(AscendingIterator other) {return this->getIndex() < other.getIndex();}
-            int operator*() {return this->getValue();}
-            int getIndex() {return this->getCurrNode() == nullptr? this->getContainer().size() : this->getCurrNode()->indexASC;}
+            int operator*() {return this->currNode->value;}
+            int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexASC;}
         };
 
-        class SideCrossIterator : DefaultIterator
+        class SideCrossIterator
         {
+        private:
+            MagicalContainer& container; // reffernce to container
+            Node* currNode; // the node which the iterator points to
         public:
-            SideCrossIterator(MagicalContainer& container_) : DefaultIterator(container_){this->setCurrNode(this->getContainer().firstNodeCROSS);}
-            SideCrossIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
-            ~SideCrossIterator() override = default;
+            SideCrossIterator(MagicalContainer& container_) : container(container_), currNode(this->container.firstNodeCROSS){} // default ctor
+            SideCrossIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
+            ~SideCrossIterator() = default;
             SideCrossIterator(const SideCrossIterator&) = default;
-            SideCrossIterator& operator=(SideCrossIterator&);
+            SideCrossIterator& operator=(const SideCrossIterator&);
             SideCrossIterator(SideCrossIterator&&) = default;
             SideCrossIterator& operator=(SideCrossIterator&&) = delete;
-            Node* firstNode() override {return this->getContainer().firstNodeCROSS;}
-            Node* nextNode() override {return this->getCurrNode()->nextNodeCROSS;}
-            MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->firstNode());}
-            MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
+            MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->container, this->container.firstNodeCROSS);}
+            MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->container, nullptr);}
             SideCrossIterator& operator++();
             bool operator==(SideCrossIterator other){return this->getIndex() == other.getIndex();}
             bool operator!=(SideCrossIterator other) {return !(*this == other);}
             bool operator>(SideCrossIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(SideCrossIterator other) {return this->getIndex() < other.getIndex();}
-            int operator*() {return this->getValue();}
-            int getIndex() {return this->getCurrNode() == nullptr? this->getContainer().size() : this->getCurrNode()->indexCROSS;}
+            int operator*() {return this->currNode->value;}
+            int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexCROSS;}
         };
 
-        class PrimeIterator : DefaultIterator
+        class PrimeIterator
         {
+        private:
+            MagicalContainer& container; // reffernce to container
+            Node* currNode; // the node which the iterator points to
         public:
-            PrimeIterator(MagicalContainer& container_) : DefaultIterator(container_){this->setCurrNode(this->getContainer().firstNodePRIME);}
-            PrimeIterator(MagicalContainer& container_, Node* ptr_) : DefaultIterator(container_, ptr_){}
-            ~PrimeIterator() override = default;
+            PrimeIterator(MagicalContainer& container_) : container(container_), currNode(this->container.firstNodePRIME){} // default ctor
+            PrimeIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
+            ~PrimeIterator() = default;
             PrimeIterator(const PrimeIterator&) = default;
-            PrimeIterator& operator=(PrimeIterator&);
+            PrimeIterator& operator=(const PrimeIterator&);
             PrimeIterator(PrimeIterator&&) = default;
             PrimeIterator& operator=(PrimeIterator&&) = delete;
-            Node* firstNode() override {return this->getContainer().firstNodePRIME;}
-            Node* nextNode() override {return this->getCurrNode()->nextNodePRIME;}
-            MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->getContainer(), this->firstNode());}
-            MagicalContainer::PrimeIterator end() {return PrimeIterator(this->getContainer(), nullptr);}
+            MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->container, this->container.firstNodePRIME);}
+            MagicalContainer::PrimeIterator end() {return PrimeIterator(this->container, nullptr);}
             PrimeIterator& operator++();
-            bool operator==(PrimeIterator other) {return this->getIndex() == other.getIndex();}
+            bool operator==(PrimeIterator other){return this->getIndex() == other.getIndex();}
             bool operator!=(PrimeIterator other) {return !(*this == other);}
             bool operator>(PrimeIterator other) {return this->getIndex() > other.getIndex();}
             bool operator<(PrimeIterator other) {return this->getIndex() < other.getIndex();}
-            int operator*() {return this->getValue();}
-            int getIndex() {return this->getCurrNode() == nullptr? this->getContainer().size() : this->getCurrNode()->indexPRIME;}
+            int operator*() {return this->currNode->value;}
+            int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexPRIME;}
         };
     };
 
