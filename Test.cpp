@@ -235,3 +235,55 @@ TEST_CASE("PrimeIterator Size TEST:")
     iterLen = primeIteratorLength(primeIter2);
     CHECK_EQ(iterLen, 0); // since all those numbers are not prime!!!
 }
+
+TEST_CASE("Default Ctor == Begin() TEST:")
+{
+    int numbers[] = {2, 3};
+    MagicalContainer container = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
+    MagicalContainer::AscendingIterator ascIter(container);
+    MagicalContainer::SideCrossIterator crossIter(container);
+    MagicalContainer::PrimeIterator primeIter(container);
+    // NOW CHECK THIS IN EACH ITERATOR:
+    CHECK(ascIter == ascIter.begin());
+    CHECK(crossIter == crossIter.begin());
+    CHECK(primeIter == primeIter.begin());
+}
+
+TEST_CASE("Iterator Illegal Operations TEST:")
+{
+    int numbers[] = {8, 5, 4};
+    // Adding: 8 -> 5 -> 4
+    // ASC:    4 -> 5 -> 8
+    // Cross:  4 -> 8 -> 5
+    // Prime:  5
+    MagicalContainer container = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
+    MagicalContainer::AscendingIterator ascIter(container);
+    MagicalContainer::SideCrossIterator crossIter(container);
+    MagicalContainer::PrimeIterator primeIter(container);
+    auto ascIT = ascIter.begin();
+    auto crosIT = crossIter.begin();
+    auto primeIT = primeIter.begin();
+    MagicalContainer container2 = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
+    MagicalContainer::AscendingIterator ascIter2(container2);
+    MagicalContainer::SideCrossIterator crossIter2(container2);
+    MagicalContainer::PrimeIterator primeIter2(container2);
+    auto ascIT2 = ascIter2.begin();
+    auto crosIT2 = crossIter2.begin();
+    auto primeIT2 = primeIter2.begin();
+
+    // COMPARE SAME ITERATORS BUT DIFFERENT CONTAINERS CASE:
+    CHECK_THROWS_AS((void)(ascIT == ascIT2), runtime_error);
+    CHECK_THROWS_AS((void)(primeIT == primeIT2), runtime_error);
+    CHECK_THROWS_AS((void)(crosIT == crosIT2), runtime_error);
+    CHECK_THROWS_AS((void)(ascIT == ascIT2), runtime_error);
+    CHECK_THROWS_AS((void)(primeIT == primeIT2), runtime_error);
+    CHECK_THROWS_AS((void)(crosIT == crosIT2), runtime_error);
+
+    // COMPARE SAME CONTAINERS BUT DIFFERENT ITERATORS CASE:
+    CHECK_THROWS_AS((void)(ascIT == ascIT2), runtime_error);
+    CHECK_THROWS_AS((void)(primeIT == primeIT2), runtime_error);
+    CHECK_THROWS_AS((void)(crosIT == crosIT2), runtime_error);
+    CHECK_THROWS_AS((void)(ascIT == ascIT2), runtime_error);
+    CHECK_THROWS_AS((void)(primeIT == primeIT2), runtime_error);
+    CHECK_THROWS_AS((void)(crosIT == crosIT2), runtime_error);
+}

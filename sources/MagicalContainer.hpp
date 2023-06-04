@@ -74,12 +74,9 @@ namespace ariel
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->container, this->container.firstNodeASC);}
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->container, nullptr);}
             AscendingIterator& operator++();
-            bool operator==(AscendingIterator other){return this->getIndex() == other.getIndex();}
-            bool operator!=(AscendingIterator other) {return !(*this == other);}
-            bool operator>(AscendingIterator other) {return this->getIndex() > other.getIndex();}
-            bool operator<(AscendingIterator other) {return this->getIndex() < other.getIndex();}
             int operator*() {return this->currNode->value;}
             int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexASC;}
+            MagicalContainer& getContainer() {return this->container;}
         };
 
         class SideCrossIterator
@@ -98,12 +95,9 @@ namespace ariel
             MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->container, this->container.firstNodeCROSS);}
             MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->container, nullptr);}
             SideCrossIterator& operator++();
-            bool operator==(SideCrossIterator other){return this->getIndex() == other.getIndex();}
-            bool operator!=(SideCrossIterator other) {return !(*this == other);}
-            bool operator>(SideCrossIterator other) {return this->getIndex() > other.getIndex();}
-            bool operator<(SideCrossIterator other) {return this->getIndex() < other.getIndex();}
             int operator*() {return this->currNode->value;}
             int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexCROSS;}
+            MagicalContainer& getContainer() {return this->container;}
         };
 
         class PrimeIterator
@@ -122,13 +116,63 @@ namespace ariel
             MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->container, this->container.firstNodePRIME);}
             MagicalContainer::PrimeIterator end() {return PrimeIterator(this->container, nullptr);}
             PrimeIterator& operator++();
-            bool operator==(PrimeIterator other){return this->getIndex() == other.getIndex();}
-            bool operator!=(PrimeIterator other) {return !(*this == other);}
-            bool operator>(PrimeIterator other) {return this->getIndex() > other.getIndex();}
-            bool operator<(PrimeIterator other) {return this->getIndex() < other.getIndex();}
             int operator*() {return this->currNode->value;}
             int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexPRIME;}
+            MagicalContainer& getContainer() {return this->container;}
         };
+
+        // using template to compare between two unknown iterators:
+
+        template <typename T1, typename T2>
+        friend bool operator==(T1 thisIT, T2 otherIT)
+        {
+            T1 *ptrIT = dynamic_cast<T1*>(&otherIT); // try to cast T2 -> T1: can happen only when T1 == T2
+            if (ptrIT == nullptr) // cannot cast T2 to T1 since there are not the same!
+            {
+                throw std::runtime_error("diff iterators comparing!");
+            }
+            if (thisIT.getContainer() != otherIT.getContainer()) // checks if their have the same container ref
+            {
+                throw std::runtime_error("iterators of diff containers comparing!");
+            }
+            return thisIT.getIndex() == otherIT.getIndex();
+        }
+
+        template <typename T1, typename T2>
+        friend bool operator!=(T1 thisIT, T2 otherIT)
+        {
+            return !(thisIT == otherIT);
+        }
+
+        template <typename T1, typename T2>
+        friend bool operator<(T1 thisIT, T2 otherIT)
+        {
+            T1 *ptrIT = dynamic_cast<T1*>(&otherIT); // try to cast T2 -> T1: can happen only when T1 == T2
+            if (ptrIT == nullptr) // cannot cast T2 to T1 since there are not the same!
+            {
+                throw std::runtime_error("diff iterators comparing!");
+            }
+            if (thisIT.getContainer() != otherIT.getContainer()) // checks if their have the same container ref
+            {
+                throw std::runtime_error("iterators of diff containers comparing!");
+            }
+            return thisIT.getIndex() < otherIT.getIndex();
+        }
+
+        template <typename T1, typename T2>
+        friend bool operator>(T1 thisIT, T2 otherIT)
+        {
+            T1 *ptrIT = dynamic_cast<T1*>(&otherIT); // try to cast T2 -> T1: can happen only when T1 == T2
+            if (ptrIT == nullptr) // cannot cast T2 to T1 since there are not the same!
+            {
+                throw std::runtime_error("diff iterators comparing!");
+            }
+            if (thisIT.getContainer() != otherIT.getContainer()) // checks if their have the same container ref
+            {
+                throw std::runtime_error("iterators of diff containers comparing!");
+            }
+            return thisIT.getIndex() > otherIT.getIndex();
+        }
     };
 
     bool isPrime(int);
