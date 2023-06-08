@@ -29,6 +29,12 @@ namespace ariel
         Node* firstNodeASC; // first node in asc order
         Node* firstNodeCROSS; // first node in side cross order
         Node* firstNodePRIME; // first node in prime order
+        // Helper Functions:
+        template<typename T, typename U> void removeFrom(int, bool, Node* &, T, U); // remove value from any order selected
+        template<typename T, typename U> void addTo(Node*, bool, Node* &, T, U); // add the node to any order selected
+        template<typename T, typename U> void setIndex(Node*, T Node::*, U Node::*); // set the index of any order selected
+        bool isInContainer(int); // check if a value is already in container
+        void reOrderCross(); // it updates the side cross order after remove/add operation on container  
 
     public:
         MagicalContainer(); // default ctor
@@ -37,13 +43,8 @@ namespace ariel
         MagicalContainer& operator=(const MagicalContainer&) = default;
         MagicalContainer(MagicalContainer&&) = default;
         MagicalContainer& operator=(MagicalContainer&&) = delete;
-        bool isInContainer(int); // check if a value is already in container
-        void reOrderCross(); // it updates the side cross order after remove/add operation on container  
         void addElement(int); // a method that adds a new node to the container
-        template<typename T, typename U> void addTo(Node*, bool, Node* &, T, U); // add the node to any order selected
-        template<typename T, typename U> void setIndex(Node*, T Node::*, U Node::*); // set the index of any order selected
         void removeElement(int); // a method that removes a node from the container
-        template<typename T, typename U> void removeFrom(int, bool, Node* &, T, U); // remove value from any order selected
         int size(); // containerSize getter
         bool operator==(MagicalContainer& other) {return this==&other;} // checks if both containers have the same reffernce
         bool operator!=(MagicalContainer& other) {return !(*this == other);}
@@ -64,7 +65,7 @@ namespace ariel
             virtual int getIndex() = 0; // curr node index getter
         };
 
-        class AscendingIterator : public Iterator
+        class AscendingIterator : public Iterator // Iterator: ASC Order
         {
         public:
             AscendingIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodeASC){} // default ctor
@@ -80,7 +81,7 @@ namespace ariel
             int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexASC;}
         };
 
-        class SideCrossIterator : public Iterator
+        class SideCrossIterator : public Iterator // Iterator: Side Cross (ASC) Order
         {
         public:
             SideCrossIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodeCROSS){} // default ctor
@@ -96,7 +97,7 @@ namespace ariel
             int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexCROSS;}
         };
 
-        class PrimeIterator : public Iterator
+        class PrimeIterator : public Iterator // Iterator: Prime ASC Order
         {
         public:
             PrimeIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodePRIME){} // default ctor
@@ -113,15 +114,11 @@ namespace ariel
         };
 
         // using template to compare between two unknown iterators:
-        template <typename T> friend void checkIT(T thisIT)
+        template <typename T> friend void checkIT(T it)
         {
-            MagicalContainer::AscendingIterator *ptrIT1 = dynamic_cast<MagicalContainer::AscendingIterator*>(&thisIT);
-            MagicalContainer::SideCrossIterator *ptrIT2 = dynamic_cast<MagicalContainer::SideCrossIterator*>(&thisIT);
-            MagicalContainer::PrimeIterator *ptrIT3 = dynamic_cast<MagicalContainer::PrimeIterator*>(&thisIT);
-            bool ok = ptrIT1 != nullptr || ptrIT2 != nullptr || ptrIT3 != nullptr;
-            assert(ok);
+            static_assert(std::is_base_of<Iterator, T>::value, "Accpet only Iterator type!"); // checks if the arg is a child of Iterator
         }
-        template <typename T, typename U> friend void checkError(T thisIT, U otherIT) // double check for bool operations between ITERATORS
+        template <typename T, typename U> friend void checkError(T thisIT, U otherIT) // check errors for bool operations between ITERATORS
         {
             checkIT(thisIT); checkIT(otherIT); // accepts only Iterator object
             T *ptrIT = dynamic_cast<T*>(&otherIT); // try to cast U -> T: can happen only when T == U
