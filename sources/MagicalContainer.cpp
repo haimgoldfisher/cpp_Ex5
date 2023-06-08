@@ -66,7 +66,7 @@ namespace ariel
             }
             curr->nextNodeDEFAULT = newNode;
         }
-        this->setIndexDefault();
+        this->setIndex(firstNodeDEFAULT, &Node::nextNodeDEFAULT, &Node::indexDEFAULT);
     }
 
 
@@ -87,7 +87,7 @@ namespace ariel
             newNode->nextNodeASC = curr->nextNodeASC;
             curr->nextNodeASC = newNode;
         }
-        this->setIndexASC();
+        this->setIndex(firstNodeASC, &Node::nextNodeASC, &Node::indexASC);
     }
 
     void MagicalContainer::addToCross(Node* newNode)
@@ -104,7 +104,7 @@ namespace ariel
             
         }
         this->reOrderCross();
-        this->setIndexCross();
+        this->setIndex(firstNodeCROSS, &Node::nextNodeCROSS, &Node::indexCROSS);
     }
 
     void MagicalContainer::addToPrime(Node* newNode)
@@ -126,7 +126,7 @@ namespace ariel
                 newNode->nextNodePRIME = curr->nextNodePRIME;
                 curr->nextNodePRIME = newNode;
             }
-            this->setIndexPrime();
+            this->setIndex(firstNodePRIME, &Node::nextNodePRIME, &Node::indexPRIME);
         }
     }
 
@@ -144,50 +144,15 @@ namespace ariel
         return false;
     }
 
-    void MagicalContainer::setIndexDefault()
+    template<typename T, typename U>
+    void MagicalContainer::setIndex(Node* first, T Node::* next, U Node::* index)
     {
         int i = 0;
-        Node* curr = this->firstNodeDEFAULT;
+        Node* curr = first;
         while (curr != nullptr)
         {
-            curr->indexDEFAULT = i;
-            curr = curr->nextNodeDEFAULT;
-            i++;
-        }
-    }
-
-    void MagicalContainer::setIndexASC()
-    {
-        int i = 0;
-        Node* curr = this->firstNodeASC;
-        while (curr != nullptr)
-        {
-            curr->indexASC = i;
-            curr = curr->nextNodeASC;
-            i++;
-        }
-    }
-
-    void MagicalContainer::setIndexCross()
-    {
-        int i = 0;
-        Node* curr = this->firstNodeCROSS;
-        while (curr != nullptr)
-        {
-            curr->indexCROSS = i;
-            curr = curr->nextNodeCROSS;
-            i++;
-        }
-    }
-
-    void MagicalContainer::setIndexPrime()
-    {
-        int i = 0;
-        Node* curr = this->firstNodePRIME;
-        while (curr != nullptr)
-        {
-            curr->indexPRIME = i;
-            curr = curr->nextNodePRIME;
+            curr->*index = i; // update the index of curr node
+            curr = curr->*next; // move to next node
             i++;
         }
     }
@@ -223,7 +188,7 @@ namespace ariel
         {
             prev->nextNodeDEFAULT = curr->nextNodeDEFAULT;
         }
-        this->setIndexDefault();
+        this->setIndex(firstNodeDEFAULT, &Node::nextNodeDEFAULT, &Node::indexDEFAULT);
         delete curr; // this is the last time so it can delete the node
     }
 
@@ -245,7 +210,7 @@ namespace ariel
         {
             prev->nextNodeASC = curr->nextNodeASC;
         }
-        this->setIndexASC();
+        this->setIndex(firstNodeASC, &Node::nextNodeASC, &Node::indexASC);
     }
 
     void MagicalContainer::removeFromCross(int val)
@@ -267,7 +232,7 @@ namespace ariel
             prev->nextNodeCROSS = curr->nextNodeCROSS;
         }
         reOrderCross();
-        this->setIndexCross();
+        this->setIndex(firstNodeCROSS, &Node::nextNodeCROSS, &Node::indexCROSS);
     }
 
     void MagicalContainer::removeFromPrime(int val)
@@ -290,7 +255,7 @@ namespace ariel
             {
                 prev->nextNodePRIME = curr->nextNodePRIME;
             }
-            this->setIndexPrime();
+            this->setIndex(firstNodePRIME, &Node::nextNodePRIME, &Node::indexPRIME);
         }
     }
 
