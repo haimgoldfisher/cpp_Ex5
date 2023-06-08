@@ -249,6 +249,35 @@ TEST_CASE("Default Ctor == Begin() TEST:")
     CHECK(primeIter == primeIter.begin());
 }
 
+TEST_CASE("End() Is The Biggest TEST:")
+{
+    int numbers[] = {2};
+    MagicalContainer container = createContainer(numbers, sizeof(numbers) / sizeof(numbers[0]));
+    MagicalContainer::AscendingIterator ascIter(container);
+    MagicalContainer::SideCrossIterator crossIter(container);
+    MagicalContainer::PrimeIterator primeIter(container);
+    // NOW CHECK THIS IN EACH ITERATOR:
+    CHECK(ascIter.begin() < ascIter.end());
+    CHECK(crossIter.begin() < crossIter.end());
+    CHECK(primeIter.begin() < primeIter.end());
+    for (int i = 0; i < 10; i++)
+    {
+        container.addElement(i+10); // 2 10 11 12 13 14 15 16 17 18 19
+    }
+    for (int i = 0; i < 9; i++)
+    {
+        ++ascIter;
+        ++crossIter;
+        if (isPrime(*primeIter)) // so it will be at the end at last place
+        {
+            ++primeIter;
+        }
+    }
+    CHECK(ascIter < ascIter.end());
+    CHECK(crossIter < crossIter.end());
+    CHECK(primeIter < primeIter.end());
+}
+
 TEST_CASE("Iterator Illegal Operations TEST:")
 {
     int numbers[] = {8, 5, 4};
