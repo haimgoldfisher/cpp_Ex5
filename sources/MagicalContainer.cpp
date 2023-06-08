@@ -131,6 +131,10 @@ namespace ariel
                 addTo(newNode, true, firstNodePRIME, &Node::nextNodePRIME, &Node::indexPRIME); // adding value - with asc order
             }
         }
+        // else
+        // {
+        //     throw std::runtime_error("element is already in container!");
+        // }
     }
 
     template<typename T, typename U>
@@ -175,7 +179,7 @@ namespace ariel
         }
         else
         {
-            throw std::runtime_error("elements does not exist in container!");
+            throw std::runtime_error("element does not exist in container!");
         }
         
     }
@@ -187,38 +191,38 @@ namespace ariel
 
     void MagicalContainer::containerPrinter()
     {
-        Node* curr = this->firstNodeDEFAULT;
+        Node* curr = this->firstNodeDEFAULT; // move on adding order:
         std::cout << "Adding Order (FIFO): ";
         while (curr != nullptr) 
         {
-            curr->nextNodeDEFAULT == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> ";
+            curr->nextNodeDEFAULT == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> "; // cond for pretty printing
             curr = curr->nextNodeDEFAULT;
         }
         std::cout << std::endl;
 
-        curr = this->firstNodeASC;
+        curr = this->firstNodeASC; // move on asc order:
         std::cout << "Ascending Order: ";
         while (curr != nullptr) 
         {
-            curr->nextNodeASC == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> ";
+            curr->nextNodeASC == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> "; // cond for pretty printing
             curr = curr->nextNodeASC;
         }
         std::cout << std::endl;
 
-        curr = this->firstNodeCROSS;
+        curr = this->firstNodeCROSS; // move on side cross order:
         std::cout << "Side Cross Order: ";
         while (curr != nullptr) 
         {
-            curr->nextNodeCROSS == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> ";
+            curr->nextNodeCROSS == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> "; // cond for pretty printing
             curr = curr->nextNodeCROSS;
         }
         std::cout << std::endl;
 
-        curr = this->firstNodePRIME;
+        curr = this->firstNodePRIME; // move on prime order:
         std::cout << "Prime Order: ";
         while (curr != nullptr) 
         {
-            curr->nextNodePRIME == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> ";
+            curr->nextNodePRIME == nullptr? std::cout << curr->value << " " : std::cout << curr->value << " -> "; // cond for pretty printing
             curr = curr->nextNodePRIME;
         }
         std::cout << std::endl;

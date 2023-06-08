@@ -45,10 +45,9 @@ namespace ariel
         void removeElement(int); // a method that removes a node from the container
         template<typename T, typename U> void removeFrom(int, bool, Node* &, T, U); // remove value from any order selected
         int size(); // containerSize getter
-        bool operator==(MagicalContainer& other) {return this->firstNodeDEFAULT == other.firstNodeDEFAULT;} // checks if both container are the same 
-        bool operator!=(MagicalContainer& other) {return !(*this == other);} // checks if both container are not the same 
-
-        void containerPrinter(); // for self check
+        bool operator==(MagicalContainer& other) {return this==&other;} // checks if both containers have the same reffernce
+        bool operator!=(MagicalContainer& other) {return !(*this == other);}
+        void containerPrinter(); // print all orders - for self check
 
         class AscendingIterator
         {
@@ -114,7 +113,7 @@ namespace ariel
         };
 
         // using template to compare between two unknown iterators:
-        template <typename T, typename U> friend void checkError(T thisIT, U otherIT)
+        template <typename T, typename U> friend void checkError(T thisIT, U otherIT) // double check for bool operations between ITERATORS
         {
             T *ptrIT = dynamic_cast<T*>(&otherIT); // try to cast U -> T: can happen only when T == U
             if (ptrIT == nullptr) // cannot cast U to T since there are not the same!

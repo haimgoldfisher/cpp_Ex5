@@ -43,5 +43,9 @@ int main() {
     container.removeElement(9);
     std::cout << "Size of container after removing an element: " << container.size() << std::endl;
 
+
+    std::cout << std::endl << "******** MY DEMO ********" << std::endl << std::endl;
+    container.containerPrinter();
+
     return 0;
 }
