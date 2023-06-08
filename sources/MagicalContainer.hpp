@@ -113,8 +113,17 @@ namespace ariel
         };
 
         // using template to compare between two unknown iterators:
+        template <typename T> friend void checkIT(T thisIT)
+        {
+            MagicalContainer::AscendingIterator *ptrIT1 = dynamic_cast<MagicalContainer::AscendingIterator*>(&thisIT);
+            MagicalContainer::SideCrossIterator *ptrIT2 = dynamic_cast<MagicalContainer::SideCrossIterator*>(&thisIT);
+            MagicalContainer::PrimeIterator *ptrIT3 = dynamic_cast<MagicalContainer::PrimeIterator*>(&thisIT);
+            bool ok = ptrIT1 != nullptr || ptrIT2 != nullptr || ptrIT3 != nullptr;
+            assert(ok);
+        }
         template <typename T, typename U> friend void checkError(T thisIT, U otherIT) // double check for bool operations between ITERATORS
         {
+            checkIT(thisIT); checkIT(otherIT); // accepts only Iterator object
             T *ptrIT = dynamic_cast<T*>(&otherIT); // try to cast U -> T: can happen only when T == U
             if (ptrIT == nullptr) // cannot cast U to T since there are not the same!
             {
@@ -141,7 +150,7 @@ namespace ariel
             checkError(thisIT, otherIT);
             return thisIT.getIndex() > otherIT.getIndex();
         }
-        template <typename T> friend int operator*(T thisIT){return thisIT.getValue();} // * for iterator
+        template <typename T> friend int operator*(T thisIT){checkIT(thisIT); return thisIT.getValue();} // * for iterator
     };
 
     bool isPrime(int);
