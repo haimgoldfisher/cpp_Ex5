@@ -258,7 +258,7 @@ namespace ariel
         return *this;
     }
 
-    MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(MagicalContainer::AscendingIterator& other)
+    MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(MagicalContainer::AscendingIterator other)
     {
         if (this->getContainer() != other.getContainer())
         {
@@ -268,7 +268,7 @@ namespace ariel
         return *this;
     }
 
-        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator& other)
+        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator other)
     {
         if (this->getContainer()  != other.getContainer())
         {
@@ -278,7 +278,7 @@ namespace ariel
         return *this;
     }
 
-    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(MagicalContainer::PrimeIterator& other)
+    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(MagicalContainer::PrimeIterator other)
     {
         if (this->getContainer() != other.getContainer())
         {

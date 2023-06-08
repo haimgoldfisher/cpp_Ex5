@@ -46,8 +46,8 @@ namespace ariel
         void addElement(int); // a method that adds a new node to the container
         void removeElement(int); // a method that removes a node from the container
         int size(); // containerSize getter
-        bool operator==(MagicalContainer& other) {return this==&other;} // checks if both containers have the same reffernce
-        bool operator!=(MagicalContainer& other) {return !(*this == other);}
+        bool operator==(MagicalContainer& other) {return this == &other;} // checks if both containers have the same reffernce
+        bool operator!=(MagicalContainer& other) {return this != &other;}
         void containerPrinter(); // print all orders - for self check
 
         class Iterator // abstract class for iterators
@@ -58,6 +58,11 @@ namespace ariel
 
             public:
             Iterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor
+            virtual ~Iterator() = default;
+            Iterator(const Iterator&) = default;
+            Iterator& operator=(Iterator&) = delete;
+            Iterator(Iterator&&) = default;
+            Iterator& operator=(Iterator&&) = delete;
             MagicalContainer& getContainer() {return this->container;} // container reffernce getter
             Node* getCurrNode() {return this->currNode;} // curr node getter
             void setCurrNode(Node* node) {this->currNode = node;} // curr node setter
@@ -70,9 +75,9 @@ namespace ariel
         public:
             AscendingIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodeASC){} // default ctor
             AscendingIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
-            ~AscendingIterator() = default;
+            ~AscendingIterator() override = default;
             AscendingIterator(const AscendingIterator&) = default;
-            AscendingIterator& operator=(AscendingIterator&);
+            AscendingIterator& operator=(AscendingIterator);
             AscendingIterator(AscendingIterator&&) = default;
             AscendingIterator& operator=(AscendingIterator&&) = delete;
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->getContainer().firstNodeASC);}
@@ -86,9 +91,9 @@ namespace ariel
         public:
             SideCrossIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodeCROSS){} // default ctor
             SideCrossIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
-            ~SideCrossIterator() = default;
+            ~SideCrossIterator() override = default;
             SideCrossIterator(const SideCrossIterator&) = default;
-            SideCrossIterator& operator=(SideCrossIterator&);
+            SideCrossIterator& operator=(SideCrossIterator);
             SideCrossIterator(SideCrossIterator&&) = default;
             SideCrossIterator& operator=(SideCrossIterator&&) = delete;
             MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->getContainer().firstNodeCROSS);}
@@ -102,9 +107,9 @@ namespace ariel
         public:
             PrimeIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodePRIME){} // default ctor
             PrimeIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
-            ~PrimeIterator() = default;
+            ~PrimeIterator() override = default;
             PrimeIterator(const PrimeIterator&) = default;
-            PrimeIterator& operator=(PrimeIterator&);
+            PrimeIterator& operator=(PrimeIterator);
             PrimeIterator(PrimeIterator&&) = default;
             PrimeIterator& operator=(PrimeIterator&&) = delete;
             MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->getContainer(), this->getContainer().firstNodePRIME);}
@@ -114,7 +119,7 @@ namespace ariel
         };
 
         // using template to compare between two unknown iterators:
-        template <typename T> friend void checkIT(T it)
+        template <typename T> friend void checkIT(T iter)
         {
             static_assert(std::is_base_of<Iterator, T>::value, "Accpet only Iterator type!"); // checks if the arg is a child of Iterator
         }
