@@ -230,61 +230,61 @@ namespace ariel
 
     MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator++() 
     {
-        if (this->currNode == nullptr)
+        if (this->getCurrNode() == nullptr)
         {
             throw std::runtime_error("the iterator is at the end!");
         }
-        this->currNode = currNode->nextNodeASC;
+        this->setCurrNode(this->getCurrNode()->nextNodeASC);
         return *this;
     }
 
     MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() 
     {
-        if (this->currNode == nullptr)
+        if (this->getCurrNode() == nullptr)
         {
             throw std::runtime_error("the iterator is at the end!");
         }
-        this->currNode = currNode->nextNodeCROSS;
+        this->setCurrNode(this->getCurrNode()->nextNodeCROSS);
         return *this;
     }
 
     MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() 
     {
-        if (this->currNode == nullptr)
+        if (this->getCurrNode() == nullptr)
         {
             throw std::runtime_error("the iterator is at the end!");
         }
-        this->currNode = currNode->nextNodePRIME;
+        this->setCurrNode(this->getCurrNode()->nextNodePRIME);
         return *this;
     }
 
-        MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const MagicalContainer::AscendingIterator& other)
+    MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(MagicalContainer::AscendingIterator& other)
     {
-        if (this->container != other.container)
+        if (this->getContainer() != other.getContainer())
         {
             throw std::runtime_error("different containers!");
         }
-        this->currNode = other.currNode;
+        this->setCurrNode(other.getCurrNode());
         return *this;
     }
 
-        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const MagicalContainer::SideCrossIterator& other)
+        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator& other)
     {
-        if (this->container != other.container)
+        if (this->getContainer()  != other.getContainer())
         {
             throw std::runtime_error("different containers!");
         }
-        this->currNode = other.currNode;
+        this->setCurrNode(other.getCurrNode());
         return *this;
     }
 
-    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(const MagicalContainer::PrimeIterator& other)
+    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(MagicalContainer::PrimeIterator& other)
     {
-        if (this->container != other.container)
+        if (this->getContainer() != other.getContainer())
         {
             throw std::runtime_error("different containers!");
         }
-        this->currNode = other.currNode;
+        this->setCurrNode(other.getCurrNode());
         return *this;
     }
 

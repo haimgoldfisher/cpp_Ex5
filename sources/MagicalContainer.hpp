@@ -49,67 +49,67 @@ namespace ariel
         bool operator!=(MagicalContainer& other) {return !(*this == other);}
         void containerPrinter(); // print all orders - for self check
 
-        class AscendingIterator
+        class Iterator // abstract class for iterators
         {
-        private:
+            private:
             MagicalContainer& container; // reffernce to container
             Node* currNode; // the node which the iterator points to
+
+            public:
+            Iterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor
+            MagicalContainer& getContainer() {return this->container;} // container reffernce getter
+            Node* getCurrNode() {return this->currNode;} // curr node getter
+            void setCurrNode(Node* node) {this->currNode = node;} // curr node setter
+            int getValue(){return this->currNode->value;} // curr node value getter
+            virtual int getIndex() = 0; // curr node index getter
+        };
+
+        class AscendingIterator : public Iterator
+        {
         public:
-            AscendingIterator(MagicalContainer& container_) : container(container_), currNode(this->container.firstNodeASC){} // default ctor
-            AscendingIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
+            AscendingIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodeASC){} // default ctor
+            AscendingIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
             ~AscendingIterator() = default;
             AscendingIterator(const AscendingIterator&) = default;
-            AscendingIterator& operator=(const AscendingIterator&);
+            AscendingIterator& operator=(AscendingIterator&);
             AscendingIterator(AscendingIterator&&) = default;
             AscendingIterator& operator=(AscendingIterator&&) = delete;
-            MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->container, this->container.firstNodeASC);}
-            MagicalContainer::AscendingIterator end() {return AscendingIterator(this->container, nullptr);}
+            MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->getContainer().firstNodeASC);}
+            MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
             AscendingIterator& operator++(); // it moves the iterator to next element in asc order
-            int operator*() {return this->currNode->value;}
-            int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexASC;}
-            MagicalContainer& getContainer() {return this->container;} // container reffernce getter
+            int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexASC;}
         };
 
-        class SideCrossIterator
+        class SideCrossIterator : public Iterator
         {
-        private:
-            MagicalContainer& container; // reffernce to container
-            Node* currNode; // the node which the iterator points to
         public:
-            SideCrossIterator(MagicalContainer& container_) : container(container_), currNode(this->container.firstNodeCROSS){} // default ctor
-            SideCrossIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
+            SideCrossIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodeCROSS){} // default ctor
+            SideCrossIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
             ~SideCrossIterator() = default;
             SideCrossIterator(const SideCrossIterator&) = default;
-            SideCrossIterator& operator=(const SideCrossIterator&);
+            SideCrossIterator& operator=(SideCrossIterator&);
             SideCrossIterator(SideCrossIterator&&) = default;
             SideCrossIterator& operator=(SideCrossIterator&&) = delete;
-            MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->container, this->container.firstNodeCROSS);}
-            MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->container, nullptr);}
+            MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->getContainer().firstNodeCROSS);}
+            MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
             SideCrossIterator& operator++();
-            int operator*() {return this->currNode->value;}
-            int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexCROSS;}
-            MagicalContainer& getContainer() {return this->container;}
+            int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexCROSS;}
         };
 
-        class PrimeIterator
+        class PrimeIterator : public Iterator
         {
-        private:
-            MagicalContainer& container; // reffernce to container
-            Node* currNode; // the node which the iterator points to
         public:
-            PrimeIterator(MagicalContainer& container_) : container(container_), currNode(this->container.firstNodePRIME){} // default ctor
-            PrimeIterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor for end,begin
+            PrimeIterator(MagicalContainer& container_) : Iterator(container_, container_.firstNodePRIME){} // default ctor
+            PrimeIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
             ~PrimeIterator() = default;
             PrimeIterator(const PrimeIterator&) = default;
-            PrimeIterator& operator=(const PrimeIterator&);
+            PrimeIterator& operator=(PrimeIterator&);
             PrimeIterator(PrimeIterator&&) = default;
             PrimeIterator& operator=(PrimeIterator&&) = delete;
-            MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->container, this->container.firstNodePRIME);}
-            MagicalContainer::PrimeIterator end() {return PrimeIterator(this->container, nullptr);}
+            MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->getContainer(), this->getContainer().firstNodePRIME);}
+            MagicalContainer::PrimeIterator end() {return PrimeIterator(this->getContainer(), nullptr);}
             PrimeIterator& operator++();
-            int operator*() {return this->currNode->value;}
-            int getIndex() {return this->currNode == nullptr? this->container.containerSize : this->currNode->indexPRIME;} // so end is always max()
-            MagicalContainer& getContainer() {return this->container;}
+            int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexPRIME;} // so end is always max()
         };
 
         // using template to compare between two unknown iterators:
@@ -125,22 +125,23 @@ namespace ariel
                 throw std::runtime_error("iterators of diff containers comparing!");
             }
         }
-        template <typename T, typename U> friend bool operator==(T thisIT, U otherIT)
+        template <typename T, typename U> friend bool operator==(T thisIT, U otherIT) // == between two iterators
         {
             checkError(thisIT, otherIT);
             return thisIT.getIndex() == otherIT.getIndex();
         }
-        template <typename T, typename U> friend bool operator!=(T thisIT, U otherIT) {return !(thisIT == otherIT);}
-        template <typename T, typename U> friend bool operator<(T thisIT, U otherIT)
+        template <typename T, typename U> friend bool operator!=(T thisIT, U otherIT) {return !(thisIT == otherIT);}  // != between two iterators
+        template <typename T, typename U> friend bool operator<(T thisIT, U otherIT)  // < between two iterators
         {
             checkError(thisIT, otherIT);
             return thisIT.getIndex() < otherIT.getIndex();
         }
-        template <typename T, typename U> friend bool operator>(T thisIT, U otherIT)
+        template <typename T, typename U> friend bool operator>(T thisIT, U otherIT)  // > between two iterators
         {
             checkError(thisIT, otherIT);
             return thisIT.getIndex() > otherIT.getIndex();
         }
+        template <typename T> friend int operator*(T thisIT){return thisIT.getValue();} // * for iterator
     };
 
     bool isPrime(int);
