@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <cmath>
 
 namespace ariel
 {   
@@ -39,17 +40,10 @@ namespace ariel
         bool isInContainer(int); // check if a value is already in container
         void reOrderCross(); // it updates the side cross order after remove/add operation on container  
         void addElement(int); // a method that adds a new node to the container
-        void addToDefault(Node*); // adding order (FIFO)
-        void addToASC(Node*); // order by value
-        void addToCross(Node*); // adding order (FIFO) with cross order 
-        void addToPrime(Node*); // order by value (only prime values)
-        template<typename T, typename U>
-        void setIndex(Node*, T Node::*, U Node::*); // set the index of any order selected
+        template<typename T, typename U> void addTo(Node*, bool, Node* &, T, U); // add the node to any order selected
+        template<typename T, typename U> void setIndex(Node*, T Node::*, U Node::*); // set the index of any order selected
         void removeElement(int); // a method that removes a node from the container
-        void removeFromDefault(int); 
-        void removeFromASC(int);
-        void removeFromCross(int);
-        void removeFromPrime(int);
+        template<typename T, typename U> void removeFrom(int, bool, Node* &, T, U); // remove value from any order selected
         int size(); // containerSize getter
         bool operator==(MagicalContainer& other) {return this->firstNodeDEFAULT == other.firstNodeDEFAULT;} // checks if both container are the same 
         bool operator!=(MagicalContainer& other) {return !(*this == other);} // checks if both container are not the same 
@@ -120,11 +114,10 @@ namespace ariel
         };
 
         // using template to compare between two unknown iterators:
-        template <typename T1, typename T2>
-        friend bool operator==(T1 thisIT, T2 otherIT)
+        template <typename T, typename U> friend void checkError(T thisIT, U otherIT)
         {
-            T1 *ptrIT = dynamic_cast<T1*>(&otherIT); // try to cast T2 -> T1: can happen only when T1 == T2
-            if (ptrIT == nullptr) // cannot cast T2 to T1 since there are not the same!
+            T *ptrIT = dynamic_cast<T*>(&otherIT); // try to cast U -> T: can happen only when T == U
+            if (ptrIT == nullptr) // cannot cast U to T since there are not the same!
             {
                 throw std::runtime_error("diff iterators comparing!");
             }
@@ -132,42 +125,21 @@ namespace ariel
             {
                 throw std::runtime_error("iterators of diff containers comparing!");
             }
+        }
+        template <typename T, typename U> friend bool operator==(T thisIT, U otherIT)
+        {
+            checkError(thisIT, otherIT);
             return thisIT.getIndex() == otherIT.getIndex();
         }
-
-        template <typename T1, typename T2>
-        friend bool operator!=(T1 thisIT, T2 otherIT)
+        template <typename T, typename U> friend bool operator!=(T thisIT, U otherIT) {return !(thisIT == otherIT);}
+        template <typename T, typename U> friend bool operator<(T thisIT, U otherIT)
         {
-            return !(thisIT == otherIT);
-        }
-
-        template <typename T1, typename T2>
-        friend bool operator<(T1 thisIT, T2 otherIT)
-        {
-            T1 *ptrIT = dynamic_cast<T1*>(&otherIT); // try to cast T2 -> T1: can happen only when T1 == T2
-            if (ptrIT == nullptr) // cannot cast T2 to T1 since there are not the same!
-            {
-                throw std::runtime_error("diff iterators comparing!");
-            }
-            if (thisIT.getContainer() != otherIT.getContainer()) // checks if their have the same container ref
-            {
-                throw std::runtime_error("iterators of diff containers comparing!");
-            }
+            checkError(thisIT, otherIT);
             return thisIT.getIndex() < otherIT.getIndex();
         }
-
-        template <typename T1, typename T2>
-        friend bool operator>(T1 thisIT, T2 otherIT)
+        template <typename T, typename U> friend bool operator>(T thisIT, U otherIT)
         {
-            T1 *ptrIT = dynamic_cast<T1*>(&otherIT); // try to cast T2 -> T1: can happen only when T1 == T2
-            if (ptrIT == nullptr) // cannot cast T2 to T1 since there are not the same!
-            {
-                throw std::runtime_error("diff iterators comparing!");
-            }
-            if (thisIT.getContainer() != otherIT.getContainer()) // checks if their have the same container ref
-            {
-                throw std::runtime_error("iterators of diff containers comparing!");
-            }
+            checkError(thisIT, otherIT);
             return thisIT.getIndex() > otherIT.getIndex();
         }
     };
