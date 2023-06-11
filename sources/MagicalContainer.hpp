@@ -28,8 +28,8 @@ namespace ariel
         Node* firstNodeCROSS; // first node in side cross order
         Node* firstNodePRIME; // first node in prime order
         // Helper Functions:
-        template<typename T> void removeFrom(int, bool, Node* &, T); // remove value from any order selected
-        template<typename T> void addTo(Node*, bool, Node* &, T); // add the node to any order selected
+        template<typename T> void removeFrom(int, bool, Node* &, T Node::*); // remove value from any order selected
+        template<typename T> void addTo(Node*, bool, Node* &, T Node::*); // add the node to any order selected
         template<typename T, typename U> void setIndex(Node*, T Node::*, U Node::*); // set the index of any order selected
         bool isInContainer(int) const; // check if a value is already in container
         void reOrderCross(); // it updates the side cross order after remove/add operation on container  

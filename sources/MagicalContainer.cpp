@@ -4,7 +4,7 @@ namespace ariel
 {
     MagicalContainer::MagicalContainer() : firstNodeDEFAULT(nullptr), firstNodeASC(nullptr), firstNodeCROSS(nullptr), firstNodePRIME(nullptr), containerSize(0) {}
 
-    MagicalContainer::~MagicalContainer()
+    MagicalContainer::~MagicalContainer() // run over the default order and delete each node
     {
         if (this->size() > 0)
         {
@@ -15,12 +15,12 @@ namespace ariel
                 delete curr;
                 curr = next;
             }
-        }
+        } // no need to delete nullptr...
     }
 
     void MagicalContainer::reOrderCross() 
     {
-        if (containerSize > 1)
+        if (containerSize > 1) // trivial
         {
             Node** arr = new Node*[static_cast<size_t>(containerSize)];
             Node* curr = firstNodeASC;
@@ -52,53 +52,53 @@ namespace ariel
     }
 
     template<typename T>
-    void MagicalContainer::addTo(Node* newNode, bool asc, Node* &first, T next)
+    void MagicalContainer::addTo(Node* newNode, bool asc, Node* &first, T Node::* next)
     {
-        if (first == nullptr)
+        if (first == nullptr) // trivial - empty container
         {
             first = newNode;
+            return;
         }
-        else if (asc)
+        Node* curr = first; // ptr to first node in selected order
+        if (asc) // adding by asc order
         {
-            if (newNode->value < first->value)
+            if (newNode->value < curr->value) // the new node is the smallest node case
             {
-                newNode->*next = first;
-                first = newNode;
+                newNode->*next = curr; // the first is the second
+                first = newNode; // update newNode as the first node
             }
-            else // adding order
+            else 
             {
-                Node* curr = first;
-                while ((curr->*next) != nullptr && (curr->*next)->value < newNode->value)
+                while ((curr->*next) != nullptr && (curr->*next)->value < newNode->value) // run untill find bigger value
                 {
                     curr = curr->*next;
                 }
-                newNode->*next = curr->*next;
-                curr->*next = newNode;
+                newNode->*next = curr->*next; // newNode points to next
+                curr->*next = newNode; // curr points to newNode
             }
         }
-        else
+        else // adding by adding order
         {
-            Node* curr = first;
-            while (curr->*next != nullptr)
+            while (curr->*next != nullptr) // run until last node
             {
                 curr = curr->*next;
             }
-            curr->*next = newNode;
+            curr->*next = newNode; // newNode is the last
         }
     }
 
     bool MagicalContainer::isInContainer(int val) const
     {
-        Node* curr = this->firstNodeDEFAULT;
-        while (curr != nullptr) 
+        Node* curr = this->firstNodeDEFAULT; // because default has all nodes
+        while (curr != nullptr) // search the value in the container until nullptr
         {
             if (curr->value == val)
             {
-                return true;
+                return true; // found the value
             }
             curr = curr->nextNodeDEFAULT;
         }
-        return false;
+        return false; // didnt find the value
     }
 
     template<typename T, typename U>
@@ -137,7 +137,7 @@ namespace ariel
     }
 
     template<typename T>
-    void MagicalContainer::removeFrom(int val, bool toDelete, Node* &first, T next)
+    void MagicalContainer::removeFrom(int val, bool toDelete, Node* &first, T Node::* next)
     {
         Node* curr = first;
         Node* prev = nullptr; 
@@ -229,7 +229,7 @@ namespace ariel
 
     MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator++() 
     {
-        if (this->getCurrNode() == nullptr)
+        if (this->getCurrNode() == nullptr) // so end() cannot 'move'
         {
             throw std::runtime_error("the iterator is at the end!");
         }
@@ -239,7 +239,7 @@ namespace ariel
 
     MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() 
     {
-        if (this->getCurrNode() == nullptr)
+        if (this->getCurrNode() == nullptr) // so end() cannot 'move'
         {
             throw std::runtime_error("the iterator is at the end!");
         }
@@ -249,7 +249,7 @@ namespace ariel
 
     MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() 
     {
-        if (this->getCurrNode() == nullptr)
+        if (this->getCurrNode() == nullptr) // so end() cannot 'move'
         {
             throw std::runtime_error("the iterator is at the end!");
         }
@@ -259,7 +259,7 @@ namespace ariel
 
     MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const MagicalContainer::AscendingIterator& other)
     {
-        if (this->getContainer() != other.getContainer())
+        if (this->getContainer() != other.getContainer()) // cannot change container
         {
             throw std::runtime_error("different containers!");
         }
@@ -269,7 +269,7 @@ namespace ariel
 
         MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const MagicalContainer::SideCrossIterator& other)
     {
-        if (this->getContainer() != other.getContainer())
+        if (this->getContainer() != other.getContainer()) // cannot change container
         {
             throw std::runtime_error("different containers!");
         }
@@ -279,7 +279,7 @@ namespace ariel
 
     MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(const MagicalContainer::PrimeIterator& other)
     {
-        if (this->getContainer() != other.getContainer())
+        if (this->getContainer() != other.getContainer()) // cannot change container
         {
             throw std::runtime_error("different containers!");
         }
