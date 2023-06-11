@@ -25,35 +25,34 @@ namespace ariel
             Node** arr = new Node*[static_cast<size_t>(containerSize)];
             Node* curr = firstNodeASC;
             int index = 0; // Ascending Order: 2 -> 17 -> 25 
-            while (index < containerSize) {
+            while (index < containerSize) { // fill the small numbers 
                 arr[index] = curr;
                 curr = curr->nextNodeASC;
-                index+=2;
+                index+=2; // jump by 2 indexes
             }
             index == containerSize? index-- : index-=3;
-            while (index > -1) {
+            while (index > -1) { // fill the big numbers
                 arr[index] = curr;
                 curr = curr->nextNodeASC;
-                index-=2;
+                index-=2;// jump by 2 indexes
             }
             // now the helper arr contains the Side Cross Order 
             this->firstNodeCROSS = arr[0];
             curr = firstNodeCROSS;
-            for (int i = 1; i < containerSize; i++)
+            curr->indexCROSS = 0; // set the index of first to 0
+            for (int i = 1; i < containerSize; i++) // now update the side cross order by the helper arr
             {
-                curr->nextNodeCROSS = arr[i];
-                curr = arr[i];
-                // std::cout << curr->value << std::endl;
-
+                curr->nextNodeCROSS = arr[i]; // make arr[i] curr next node
+                curr = arr[i]; // update curr to arr[i]
+                curr->indexCROSS = i; // update curr's index to i
             }
             curr->nextNodeCROSS = nullptr;
             delete[] arr;
-            this->setIndex(firstNodeCROSS, &Node::nextNodeCROSS, &Node::indexCROSS);
         }
     }
 
-    template<typename T, typename U>
-    void MagicalContainer::addTo(Node* newNode, bool asc, Node* &first, T next, U index)
+    template<typename T>
+    void MagicalContainer::addTo(Node* newNode, bool asc, Node* &first, T next)
     {
         if (first == nullptr)
         {
@@ -86,7 +85,6 @@ namespace ariel
             }
             curr->*next = newNode;
         }
-        this->setIndex(first, next, index); // update the indexes in container
     }
 
     bool MagicalContainer::isInContainer(int val) const
@@ -122,13 +120,14 @@ namespace ariel
         {
             this->containerSize++; // since we need to use the new size in side cross reorder function
             Node* newNode = new Node(val);
-            addTo(newNode, false, firstNodeDEFAULT, &Node::nextNodeDEFAULT, &Node::indexDEFAULT); // adding value - without asc order
-            addTo(newNode, true, firstNodeASC, &Node::nextNodeASC, &Node::indexASC); // adding value - with asc order
-            addTo(newNode, false, firstNodeCROSS, &Node::nextNodeCROSS, &Node::indexCROSS);
+            addTo(newNode, false, firstNodeDEFAULT, &Node::nextNodeDEFAULT); // adding value - without asc order
+            addTo(newNode, true, firstNodeASC, &Node::nextNodeASC); // adding value - with asc order
+            setIndex(firstNodeASC, &Node::nextNodeASC, &Node::indexASC);
+            addTo(newNode, false, firstNodeCROSS, &Node::nextNodeCROSS);
             reOrderCross(); // update the new side cross order
             if (isPrime(val)) // so it belongs to the prime iterator
             {
-                addTo(newNode, true, firstNodePRIME, &Node::nextNodePRIME, &Node::indexPRIME); // adding value - with asc order
+                addTo(newNode, true, firstNodePRIME, &Node::nextNodePRIME); // adding value - with asc order
             }
         }
         // else
@@ -137,8 +136,8 @@ namespace ariel
         // }
     }
 
-    template<typename T, typename U>
-    void MagicalContainer::removeFrom(int val, bool toDelete, Node* &first, T next, U index)
+    template<typename T>
+    void MagicalContainer::removeFrom(int val, bool toDelete, Node* &first, T next)
     {
         Node* curr = first;
         Node* prev = nullptr; 
@@ -156,7 +155,6 @@ namespace ariel
         {
             prev->*next = curr->*next;
         }
-        this->setIndex(first, next, index); // update the indexes in container
         if (toDelete) // if its the last time so we must acctualy delete that node
         {
             delete curr; // free the node from heap
@@ -168,14 +166,15 @@ namespace ariel
         if (isInContainer(val)) // can remove it
         {
             this->containerSize--;
-            removeFrom(val, false, firstNodeASC, &Node::nextNodeASC, &Node::indexASC); // remove without delete the node from asc
-            removeFrom(val, false, firstNodeCROSS, &Node::nextNodeCROSS, &Node::indexCROSS); // remove without delete the node from side cross
+            removeFrom(val, false, firstNodeASC, &Node::nextNodeASC); // remove without delete the node from asc
+            removeFrom(val, false, firstNodeCROSS, &Node::nextNodeCROSS); // remove without delete the node from side cross
+            setIndex(firstNodeASC, &Node::nextNodeASC, &Node::indexASC);
             reOrderCross(); // update the new side cross order
             if (isPrime(val)) // only when the value is prime
             {
-                removeFrom(val, false, firstNodePRIME, &Node::nextNodePRIME, &Node::indexPRIME); // remove without delete the node from prime
+                removeFrom(val, false, firstNodePRIME, &Node::nextNodePRIME); // remove without delete the node from prime
             }
-            removeFrom(val, true, firstNodeDEFAULT, &Node::nextNodeDEFAULT, &Node::indexDEFAULT); // + remove the node
+            removeFrom(val, true, firstNodeDEFAULT, &Node::nextNodeDEFAULT); // + remove the node
         }
         else
         {
