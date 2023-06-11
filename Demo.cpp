@@ -46,5 +46,9 @@ int main() {
 
     std::cout << std::endl << "******** MY DEMO ********" << std::endl << std::endl;
     container.containerPrinter();
+    MagicalContainer::AscendingIterator asc;
+    asc = ascIter.begin();
+    std::cout << std::to_string(*asc) << std::endl;
+
     return 0;
 }
