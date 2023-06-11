@@ -89,7 +89,7 @@ namespace ariel
         this->setIndex(first, next, index); // update the indexes in container
     }
 
-    bool MagicalContainer::isInContainer(int val)
+    bool MagicalContainer::isInContainer(int val) const
     {
         Node* curr = this->firstNodeDEFAULT;
         while (curr != nullptr) 
@@ -184,12 +184,12 @@ namespace ariel
         
     }
 
-    int MagicalContainer::size()
+    int MagicalContainer::size() const
     {
         return this->containerSize;
     }
 
-    void MagicalContainer::containerPrinter()
+    void MagicalContainer::containerPrinter() const
     {
         Node* curr = this->firstNodeDEFAULT; // move on adding order:
         std::cout << "Adding Order (FIFO): ";
@@ -258,7 +258,7 @@ namespace ariel
         return *this;
     }
 
-    MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(MagicalContainer::AscendingIterator other)
+    MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const MagicalContainer::AscendingIterator& other)
     {
         if (this->getContainer() != other.getContainer())
         {
@@ -268,9 +268,9 @@ namespace ariel
         return *this;
     }
 
-        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(MagicalContainer::SideCrossIterator other)
+        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const MagicalContainer::SideCrossIterator& other)
     {
-        if (this->getContainer()  != other.getContainer())
+        if (this->getContainer() != other.getContainer())
         {
             throw std::runtime_error("different containers!");
         }
@@ -278,7 +278,7 @@ namespace ariel
         return *this;
     }
 
-    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(MagicalContainer::PrimeIterator other)
+    MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(const MagicalContainer::PrimeIterator& other)
     {
         if (this->getContainer() != other.getContainer())
         {

@@ -33,7 +33,7 @@ namespace ariel
         template<typename T, typename U> void removeFrom(int, bool, Node* &, T, U); // remove value from any order selected
         template<typename T, typename U> void addTo(Node*, bool, Node* &, T, U); // add the node to any order selected
         template<typename T, typename U> void setIndex(Node*, T Node::*, U Node::*); // set the index of any order selected
-        bool isInContainer(int); // check if a value is already in container
+        bool isInContainer(int) const; // check if a value is already in container
         void reOrderCross(); // it updates the side cross order after remove/add operation on container  
 
     public:
@@ -45,10 +45,10 @@ namespace ariel
         MagicalContainer& operator=(MagicalContainer&&) = delete;
         void addElement(int); // a method that adds a new node to the container
         void removeElement(int); // a method that removes a node from the container
-        int size(); // containerSize getter
-        bool operator==(MagicalContainer& other) {return this == &other;} // checks if both containers have the same reffernce
-        bool operator!=(MagicalContainer& other) {return this != &other;}
-        void containerPrinter(); // print all orders - for self check
+        int size() const; // containerSize getter
+        bool operator==(const MagicalContainer& other) const {return this == &other;} // checks if both containers have the same reffernce
+        bool operator!=(const MagicalContainer& other) const {return this != &other;}
+        void containerPrinter() const; // print all orders - for self check
 
         class Iterator // abstract class for iterators
         {
@@ -60,14 +60,14 @@ namespace ariel
             Iterator(MagicalContainer& container_, Node* ptr_) : container(container_), currNode(ptr_){} // ctor
             virtual ~Iterator() = default;
             Iterator(const Iterator&) = default;
-            Iterator& operator=(Iterator&) = delete;
+            Iterator& operator=(const Iterator&) = delete;
             Iterator(Iterator&&) = default;
             Iterator& operator=(Iterator&&) = delete;
-            MagicalContainer& getContainer() {return this->container;} // container reffernce getter
-            Node* getCurrNode() {return this->currNode;} // curr node getter
+            MagicalContainer& getContainer() const {return this->container;} // container reffernce getter
+            Node* getCurrNode() const {return this->currNode;} // curr node getter
             void setCurrNode(Node* node) {this->currNode = node;} // curr node setter
-            int getValue(){return this->currNode->value;} // curr node value getter
-            virtual int getIndex() = 0; // curr node index getter
+            int getValue() const {return this->currNode->value;} // curr node value getter
+            virtual int getIndex() const = 0; // curr node index getter
         };
 
         class AscendingIterator : public Iterator // Iterator: ASC Order
@@ -77,13 +77,13 @@ namespace ariel
             AscendingIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
             ~AscendingIterator() override = default;
             AscendingIterator(const AscendingIterator&) = default;
-            AscendingIterator& operator=(AscendingIterator);
+            AscendingIterator& operator=(const AscendingIterator&);
             AscendingIterator(AscendingIterator&&) = default;
             AscendingIterator& operator=(AscendingIterator&&) = delete;
             MagicalContainer::AscendingIterator begin() {return AscendingIterator(this->getContainer(), this->getContainer().firstNodeASC);}
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
             AscendingIterator& operator++(); // it moves the iterator to next element in asc order
-            int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexASC;}
+            int getIndex() const override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexASC;}
         };
 
         class SideCrossIterator : public Iterator // Iterator: Side Cross (ASC) Order
@@ -93,13 +93,13 @@ namespace ariel
             SideCrossIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
             ~SideCrossIterator() override = default;
             SideCrossIterator(const SideCrossIterator&) = default;
-            SideCrossIterator& operator=(SideCrossIterator);
+            SideCrossIterator& operator=(const SideCrossIterator&);
             SideCrossIterator(SideCrossIterator&&) = default;
             SideCrossIterator& operator=(SideCrossIterator&&) = delete;
             MagicalContainer::SideCrossIterator begin() {return SideCrossIterator(this->getContainer(), this->getContainer().firstNodeCROSS);}
             MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
             SideCrossIterator& operator++();
-            int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexCROSS;}
+            int getIndex() const override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexCROSS;}
         };
 
         class PrimeIterator : public Iterator // Iterator: Prime ASC Order
@@ -109,13 +109,13 @@ namespace ariel
             PrimeIterator(MagicalContainer& container_, Node* ptr_) : Iterator(container_, ptr_){} // ctor for end,begin
             ~PrimeIterator() override = default;
             PrimeIterator(const PrimeIterator&) = default;
-            PrimeIterator& operator=(PrimeIterator);
+            PrimeIterator& operator=(const PrimeIterator&);
             PrimeIterator(PrimeIterator&&) = default;
             PrimeIterator& operator=(PrimeIterator&&) = delete;
             MagicalContainer::PrimeIterator begin() {return PrimeIterator(this->getContainer(), this->getContainer().firstNodePRIME);}
             MagicalContainer::PrimeIterator end() {return PrimeIterator(this->getContainer(), nullptr);}
             PrimeIterator& operator++();
-            int getIndex() override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexPRIME;} // so end is always max()
+            int getIndex() const override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexPRIME;} // so end is always max()
         };
 
         // using template to compare between two unknown iterators:
@@ -136,23 +136,23 @@ namespace ariel
                 throw std::runtime_error("iterators of diff containers comparing!");
             }
         }
-        template <typename T, typename U> friend bool operator==(T thisIT, U otherIT) // == between two iterators
+        template <typename T, typename U> friend bool operator==(const T thisIT, const U otherIT) // == between two iterators
         {
             checkError(thisIT, otherIT);
             return thisIT.getIndex() == otherIT.getIndex();
         }
-        template <typename T, typename U> friend bool operator!=(T thisIT, U otherIT) {return !(thisIT == otherIT);}  // != between two iterators
-        template <typename T, typename U> friend bool operator<(T thisIT, U otherIT)  // < between two iterators
+        template <typename T, typename U> friend bool operator!=(const T thisIT, const U otherIT) {return !(thisIT == otherIT);}  // != between two iterators
+        template <typename T, typename U> friend bool operator<(const T thisIT, const U otherIT)  // < between two iterators
         {
             checkError(thisIT, otherIT);
             return thisIT.getIndex() < otherIT.getIndex();
         }
-        template <typename T, typename U> friend bool operator>(T thisIT, U otherIT)  // > between two iterators
+        template <typename T, typename U> friend bool operator>(const T thisIT, const U otherIT)  // > between two iterators
         {
             checkError(thisIT, otherIT);
             return thisIT.getIndex() > otherIT.getIndex();
         }
-        template <typename T> friend int operator*(T thisIT){checkIT(thisIT); return thisIT.getValue();} // * for iterator
+        template <typename T> friend int operator*(const T thisIT){checkIT(thisIT); return thisIT.getValue();} // * for iterator
     };
 
     bool isPrime(int);
