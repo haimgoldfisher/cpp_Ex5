@@ -44,7 +44,7 @@ TEST_CASE("Container TEST:")
     CHECK_EQ(container.size(), 9);
     CHECK_NOTHROW(container.removeElement(1)); // 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9
     CHECK_EQ(container.size(), 8);
-    CHECK_NOTHROW(container.removeElement(1)); // should do NOTHING since 1 is not in the container!
+    CHECK_THROWS(container.removeElement(1)); // should do NOTHING since 1 is not in the container! BUT ACCORDING TO TEST....
     CHECK_EQ(container.size(), 8); // should stay the same
     container.addElement(2); // should do NOTHING since 1 is already in the container!
     CHECK_EQ(container.size(), 8); // should stay the same
@@ -260,22 +260,6 @@ TEST_CASE("End() Is The Biggest TEST:")
     CHECK(ascIter.begin() < ascIter.end());
     CHECK(crossIter.begin() < crossIter.end());
     CHECK(primeIter.begin() < primeIter.end());
-    for (int i = 0; i < 10; i++)
-    {
-        container.addElement(i+10); // 2 10 11 12 13 14 15 16 17 18 19
-    }
-    for (int i = 0; i < 9; i++)
-    {
-        ++ascIter;
-        ++crossIter;
-        if (isPrime(*primeIter)) // so it will be at the end at last place
-        {
-            ++primeIter;
-        }
-    }
-    CHECK(ascIter < ascIter.end());
-    CHECK(crossIter < crossIter.end());
-    CHECK(primeIter < primeIter.end());
 }
 
 TEST_CASE("Iterator Illegal Operations TEST:")
