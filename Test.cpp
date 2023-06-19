@@ -309,10 +309,10 @@ TEST_CASE("Iterator Illegal Operations TEST:")
     CHECK_THROWS_AS((void)(crosIT == crosIT2), runtime_error);
 
     // COMPARE SAME CONTAINERS BUT DIFFERENT ITERATORS CASE:
-    CHECK_THROWS_AS((void)(ascIT == ascIT2), runtime_error);
-    CHECK_THROWS_AS((void)(primeIT == primeIT2), runtime_error);
-    CHECK_THROWS_AS((void)(crosIT == crosIT2), runtime_error);
-    CHECK_THROWS_AS((void)(ascIT == ascIT2), runtime_error);
-    CHECK_THROWS_AS((void)(primeIT == primeIT2), runtime_error);
-    CHECK_THROWS_AS((void)(crosIT == crosIT2), runtime_error);
+    CHECK_THROWS_AS((void)(ascIT == crosIT), runtime_error);
+    CHECK_THROWS_AS((void)(crosIT == ascIT), runtime_error);
+    CHECK_THROWS_AS((void)(ascIT == primeIT), runtime_error);
+    CHECK_THROWS_AS((void)(primeIT == ascIT), runtime_error);
+    CHECK_THROWS_AS((void)(primeIT == crosIT), runtime_error);
+    CHECK_THROWS_AS((void)(crosIT == primeIT), runtime_error);
 }
