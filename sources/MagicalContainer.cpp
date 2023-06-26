@@ -114,7 +114,7 @@ namespace ariel
         }
     }
 
-    void MagicalContainer::addElement(int val)
+    MagicalContainer& MagicalContainer::addElement(int val)
     {
         if (!isInContainer(val)) // every value is unique
         {
@@ -130,6 +130,7 @@ namespace ariel
                 addTo(newNode, true, firstNodePRIME, &Node::nextNodePRIME); // adding value - with asc order
             }
         }
+        return *this;
         // else
         // {
         //     throw std::runtime_error("element is already in container!");
@@ -161,7 +162,7 @@ namespace ariel
         }
     }
 
-    void MagicalContainer::removeElement(int val)
+    MagicalContainer& MagicalContainer::removeElement(int val)
     {
         if (isInContainer(val)) // can remove it
         {
@@ -180,7 +181,7 @@ namespace ariel
         {
             throw std::runtime_error("element does not exist in container!");
         }
-        
+        return *this;
     }
 
     int MagicalContainer::size() const
@@ -267,7 +268,7 @@ namespace ariel
         return *this;
     }
 
-        MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const MagicalContainer::SideCrossIterator& other)
+    MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const MagicalContainer::SideCrossIterator& other)
     {
         if (this->getContainer() != other.getContainer()) // cannot change container
         {

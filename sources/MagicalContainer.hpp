@@ -41,8 +41,8 @@ namespace ariel
         MagicalContainer& operator=(const MagicalContainer&) = default; // copy assignment operator
         MagicalContainer(MagicalContainer&&) = default; // move ctor
         MagicalContainer& operator=(MagicalContainer&&) = delete; // move assignment operator
-        void addElement(int); // a method that adds a new node to the container
-        void removeElement(int); // a method that removes a node from the container
+        MagicalContainer& addElement(int); // a method that adds a new node to the container
+        MagicalContainer& removeElement(int); // a method that removes a node from the container
         int size() const; // containerSize getter
         bool operator==(const MagicalContainer& other) const {return this == &other;} // checks if both containers have the same reffernce
         bool operator!=(const MagicalContainer& other) const {return this != &other;}

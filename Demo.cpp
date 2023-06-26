@@ -45,10 +45,65 @@ int main() {
 
 
     std::cout << std::endl << "******** MY DEMO ********" << std::endl << std::endl;
+
+    std::cout << "let's play with the container! first lets take a look at it:" << std::endl << std::endl;
     container.containerPrinter();
+    std::cout << "the size of the container: " + std::to_string(container.size()) + " (should be 4)" << std::endl << std::endl;
+    std::cout << "let's return 9 to the container and print it again:" << std::endl << std::endl;
+    container.addElement(9);
+    container.containerPrinter();
+    std::cout << "the size of the container: " + std::to_string(container.size()) + " (should be 5)" << std::endl << std::endl;
     MagicalContainer::AscendingIterator asc;
     asc = ascIter.begin();
-    std::cout << std::to_string(*asc) << std::endl;
+    std::cout << "the first element in asc iterator: " + std::to_string(*asc) + " (should be 2)" << std::endl;
+    ++asc;
+    std::cout << "the second element in asc iterator: " + std::to_string(*asc) + " (should be 3)" << std::endl;
+    ++asc;
+    std::cout << "the third element in asc iterator: " + std::to_string(*asc) + " (should be 9)" << std::endl << std::endl;
+
+    MagicalContainer::SideCrossIterator cross;
+    cross = crossIter.begin();
+    std::cout << "the first element in side cross iterator: " + std::to_string(*cross) + " (should be 2)" << std::endl;
+    ++cross;
+    std::cout << "the second element in side cross iterator: " + std::to_string(*cross) + " (should be 25)" << std::endl;
+    ++cross;
+    std::cout << "the third element in side cross iterator: " + std::to_string(*cross) + " (should be 3)" << std::endl << std::endl;
+
+    MagicalContainer::PrimeIterator prime;
+    prime = primeIter.begin();
+    std::cout << "the first element in prime iterator: " + std::to_string(*prime) + " (should be 2)" << std::endl;
+    ++prime;
+    std::cout << "the second element in prime iterator: " + std::to_string(*prime) + " (should be 3)" << std::endl;
+    ++prime;
+    std::cout << "the third element in prime iterator: " + std::to_string(*prime) + " (should be 17)" << std::endl << std::endl;
+
+    std::cout << "let's remove 2, then lets add 18 & 19. now we can print it:" << std::endl << std::endl;
+    container.removeElement(2).addElement(18).addElement(19);
+    container.containerPrinter();
+    std::cout << "the size of the container: " + std::to_string(container.size()) + " (should be 6)" << std::endl << std::endl;
+    std::cout << "where our iterators now?:" << std::endl << std::endl;
+    std::cout << "asc iterator: " + std::to_string(*asc) + " (should be 9)" << std::endl;
+    std::cout << "side cross iterator: " + std::to_string(*cross) + " (should be 3)" << std::endl;
+    std::cout << "prime iterator: " + std::to_string(*prime) + " (should be 17)" << std::endl << std::endl;
+    std::cout << "let's move them one step forward and check them:" << std::endl << std::endl;
+    ++asc; ++cross; ++prime;
+    std::cout << "asc iterator: " + std::to_string(*asc) + " (should be 17)" << std::endl;
+    std::cout << "side cross iterator: " + std::to_string(*cross) + " (should be 25)" << std::endl;
+    std::cout << "prime iterator: " + std::to_string(*prime) + " (should be 19)" << std::endl << std::endl;
+
+    std::cout << "let's add 29 now we can print it:" << std::endl << std::endl;
+    container.addElement(29);
+    container.containerPrinter();
+    std::cout << "the size of the container: " + std::to_string(container.size()) + " (should be 7)" << std::endl << std::endl;
+    std::cout << "where our iterators now?:" << std::endl << std::endl;
+    std::cout << "asc iterator: " + std::to_string(*asc) + " (should be 17)" << std::endl;
+    std::cout << "side cross iterator: " + std::to_string(*cross) + " (should be 25)" << std::endl;
+    std::cout << "prime iterator: " + std::to_string(*prime) + " (should be 19)" << std::endl << std::endl;
+    std::cout << "let's move them one step forward and check them:" << std::endl << std::endl;
+    ++asc; ++cross; ++prime;
+    std::cout << "asc iterator: " + std::to_string(*asc) + " (should be 18)" << std::endl;
+    std::cout << "side cross iterator: " + std::to_string(*cross) + " (should be 17)" << std::endl;
+    std::cout << "prime iterator: " + std::to_string(*prime) + " (should be 29)" << std::endl << std::endl;
 
     return 0;
 }
