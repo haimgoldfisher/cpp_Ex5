@@ -4,6 +4,8 @@
 #include <cassert>
 #include <cmath>
 
+typedef enum {ASC = 0, CROSS = 1, PRIME = 2} itType; // iterator types
+
 namespace ariel
 {   
     class MagicalContainer
@@ -67,6 +69,7 @@ namespace ariel
             void setCurrNode(Node* node) {this->currNode = node;} // curr node setter
             int getValue() const {return this->currNode->value;} // curr node value getter
             virtual int getIndex() const = 0; // curr node index getter
+            virtual itType getType() const = 0; // return the type of the iterator
         };
 
         class AscendingIterator : public Iterator // Iterator: ASC Order
@@ -84,6 +87,7 @@ namespace ariel
             MagicalContainer::AscendingIterator end() {return AscendingIterator(this->getContainer(), nullptr);}
             AscendingIterator& operator++(); // it moves the iterator to next element in asc order
             int getIndex() const override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexASC;}
+            itType getType() const override {return ASC;} // return the type of the iterator
         };
 
         class SideCrossIterator : public Iterator // Iterator: Side Cross (ASC) Order
@@ -101,6 +105,7 @@ namespace ariel
             MagicalContainer::SideCrossIterator end() {return SideCrossIterator(this->getContainer(), nullptr);}
             SideCrossIterator& operator++();
             int getIndex() const override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexCROSS;}
+            itType getType() const override {return CROSS;} // return the type of the iterator
         };
 
         class PrimeIterator : public Iterator // Iterator: Prime ASC Order
@@ -118,6 +123,7 @@ namespace ariel
             MagicalContainer::PrimeIterator end() {return PrimeIterator(this->getContainer(), nullptr);}
             PrimeIterator& operator++();
             int getIndex() const override {return this->getCurrNode() == nullptr? this->getContainer().containerSize : this->getCurrNode()->indexASC;}
+            itType getType() const override {return PRIME;} // return the type of the iterator
         };
 
         // using template to compare between two unknown iterators:
@@ -128,8 +134,7 @@ namespace ariel
         template <typename T, typename U> friend void checkError(T thisIT, U otherIT) // check errors for bool operations between ITERATORS
         {
             checkIT(thisIT); checkIT(otherIT); // accepts only Iterator object
-            T *ptrIT = dynamic_cast<T*>(&otherIT); // try to cast U -> T: can happen only when T == U
-            if (ptrIT == nullptr) // cannot cast U to T since there are not the same!
+            if (thisIT.getType() != otherIT.getType()) // cannot cast U to T since there are not the same!
             {
                 throw std::runtime_error("diff iterators comparing!");
             }
