@@ -129,12 +129,12 @@ namespace ariel
         // using template to compare between two unknown iterators:
         template <typename T> friend void checkIT(T iter)
         {
-            static_assert(std::is_base_of<Iterator, T>::value, "Accpet only Iterator type!"); // checks if the arg is a child of Iterator class
+            static_assert(std::is_base_of<Iterator, T>::value, "Accpet only Iterator type!"); // checks if arg is a child of Iterator, otherwise, raises COMPILING error
         }
         template <typename T, typename U> friend void checkError(T thisIT, U otherIT) // check errors for bool operations between ITERATORS
         {
             checkIT(thisIT); checkIT(otherIT); // accepts only Iterator object
-            if (thisIT.getType() != otherIT.getType()) // cannot cast U to T since there are not the same!
+            if (thisIT.getType() != otherIT.getType()) // checks if both iterators are the same, otherwise, raises RUNTIME error
             {
                 throw std::runtime_error("diff iterators comparing!");
             }
